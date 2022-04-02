@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MyProjectGame</string>
+    <string name="Select_button">Выбрать заказ</string>
+    <string name="_20_100">20/100</string>
+</resources>
