@@ -1,21 +1,21 @@
 package com.example.myprojectgame;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
-    private final List<OrderData> data;
+    public static List<OrderData> data;
+    protected static Button lastBut;
     protected static LinkedList<Button> buttons = new LinkedList<>();
 
     public OrdersAdapter(List<OrderData> data) {
@@ -49,14 +49,13 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
             button.setOnClickListener(v -> {
                 button.setActivated(true);
-                for (Button btn : buttons) {
-                    if (btn.getText() != button.getText()) {
-                        btn.setActivated(false);
-                    }
+                if (lastBut != null){
+                    lastBut.setActivated(false);
                 }
+                lastBut = button;
                 if (ChooseOrderActivity.step == 0){
                     ChooseOrderActivity.idOrder = button.getId();
-                    ChooseOrderActivity.OrderChoose(button.getText());
+                    ChooseOrderActivity.OrderChoose(button.getText(), data.get(Integer.parseInt((String) button.getText())).getLocation());
                 }
                 if (ChooseOrderActivity.step == 1) {
                     ChooseOrderActivity.idTransport = button.getId();

@@ -31,15 +31,15 @@ public class OrderFragment extends Fragment {
     private List<OrderData> getData() {
         List<OrderData> data = new ArrayList<>();
         if ( ChooseOrderActivity.step == 0) {
-            data.add(new OrderData("1", "" + R.drawable.mcdonalds));
-            data.add(new OrderData("2", "" + R.drawable.mcdonalds));
-            data.add(new OrderData("3", "" + R.drawable.mcdonalds));
-            data.add(new OrderData("4", "" + R.drawable.mcdonalds));
+            data.add(new OrderData("1", "" + R.drawable.mcdonalds, "54.98362646242438, 82.89084654277313"));
+            data.add(new OrderData("2", "" + R.drawable.mcdonalds,"54.985842517037575, 82.89033118395638"));
+            data.add(new OrderData("3", "" + R.drawable.mcdonalds,"54.985842517037575, 82.89033118395638"));
+            data.add(new OrderData("4", "" + R.drawable.mcdonalds,"54.985842517037575, 82.89033118395638"));
 
-            data.add(new OrderData("5", "" + R.drawable.mcdonalds));
-            data.add(new OrderData("6", "" + R.drawable.mcdonalds));
-            data.add(new OrderData("7", "" + R.drawable.mcdonalds));
-            data.add(new OrderData("8", "" + R.drawable.mcdonalds));
+            data.add(new OrderData("5", "" + R.drawable.mcdonalds,"54.985842517037575, 82.89033118395638"));
+            data.add(new OrderData("6", "" + R.drawable.mcdonalds,"54.985842517037575, 82.89033118395638"));
+            data.add(new OrderData("7", "" + R.drawable.mcdonalds,"54.985842517037575, 82.89033118395638"));
+            data.add(new OrderData("8", "" + R.drawable.mcdonalds,"54.985842517037575, 82.89033118395638"));
         }
         else {
             data.add(new OrderData("1", "" + R.drawable.bus));

@@ -5,7 +5,8 @@
       <map>
         <entry key="..\:/DeliveryBlitz/app/src/main/res/drawable/radius_corners.xml" value="0.12" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/drawable/redius_corners.xml" value="0.12" />
-        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_delivery.xml" value="0.14666666666666667" />
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/drawable/view_style.xml" value="0.1" />
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_delivery.xml" value="0.22" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_main.xml" value="0.17552083333333332" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_order.xml" value="0.16018518518518518" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_transport.xml" value="0.1" />

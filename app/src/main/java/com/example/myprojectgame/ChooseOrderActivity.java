@@ -17,7 +17,7 @@ import java.util.List;
 public class ChooseOrderActivity extends BaseActivity {
     private static TextView textView;
     private RecyclerView recyclerLayout;
-    public static int step,idTransport, idOrder;
+    public static int step, idTransport, idOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +42,15 @@ public class ChooseOrderActivity extends BaseActivity {
     }
 
     private void nextActivity() {
-            Intent intent = new Intent(ChooseOrderActivity.this, GoggleMapsFragment.class);
+            Intent intent = new Intent(ChooseOrderActivity.this, DeliveryActivity.class);
             startActivity(intent);
             finish();
     }
 
 
-    public static void OrderChoose(CharSequence text) {
+    public static void OrderChoose(CharSequence text, ArrayList loc) {
         textView.setText("Выбран заказ: " + text);
+        GameData.order = loc;
     }
 
     public static void OrderTransport(CharSequence text) {

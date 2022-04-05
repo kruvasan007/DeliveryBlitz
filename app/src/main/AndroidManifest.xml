@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".GoggleMapsFragment"
+            android:name=".DeliveryActivity"
             android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
