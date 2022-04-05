@@ -16,16 +16,12 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button buttonStart = findViewById(R.id.select_button);
-
         buttonStart.setOnClickListener(v -> startButton());
     }
 
     private void startButton(){
-        try {
             Intent intent = new Intent(MainActivity.this, ChooseOrderActivity.class);
             startActivity(intent);
             finish();
-        }catch (Exception e){
-        }
     }
 }

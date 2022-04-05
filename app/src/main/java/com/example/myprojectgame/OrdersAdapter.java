@@ -1,10 +1,13 @@
 package com.example.myprojectgame;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,13 +54,22 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                         btn.setActivated(false);
                     }
                 }
-                ChooseOrderActivity.OrderChoose(button.getText());
+                if (ChooseOrderActivity.step == 0){
+                    ChooseOrderActivity.idOrder = button.getId();
+                    ChooseOrderActivity.OrderChoose(button.getText());
+                }
+                if (ChooseOrderActivity.step == 1) {
+                    ChooseOrderActivity.idTransport = button.getId();
+                    ChooseOrderActivity.OrderTransport(button.getText());
+                }
             });
         }
 
         public void bind(OrderData item) {
-            button.setText(item.getText());
+            button.setText(item.getName());
             buttons.add(button);
+            Drawable myDrawable = button.getContext().getDrawable(Integer.parseInt(item.getId()));
+            button.setCompoundDrawablesWithIntrinsicBounds(null,myDrawable,null,null);
             //TODO: init item
         }
     }
