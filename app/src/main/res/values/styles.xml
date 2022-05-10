@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ButtonStyle" parent="Theme.MyProjectGame">
+        <item name="android:textSize">18sp</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="backgroundTint">@color/blue</item>
+    </style>
+    <style name="FrameStyle" parent="Theme.MyProjectGame">
+        <item name="cornerRadius">16dp</item>
+    </style>
+</resources>

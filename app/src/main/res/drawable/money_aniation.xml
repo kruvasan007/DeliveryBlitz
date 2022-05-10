@@ -1,0 +1,9 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="1000"
+    android:valueFrom="1"
+    android:valueTo="0"
+    android:valueType="floatType"
+    android:repeatCount="1"
+    android:repeatMode="reverse">
+    <item android:duration="15" android:drawable="@drawable/money"/>
+</animation-list>

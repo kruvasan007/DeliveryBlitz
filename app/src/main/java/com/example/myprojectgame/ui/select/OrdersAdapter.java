@@ -1,4 +1,6 @@
-package com.example.myprojectgame;
+package com.example.myprojectgame.ui.select;
+
+import static com.example.myprojectgame.ui.root.MainActivity.gameData;
 
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -9,16 +11,24 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myprojectgame.R;
+import com.example.myprojectgame.db.Order;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
-    public static List<OrderData> data;
+    public static List<Order> data;
     protected static Button lastBut;
     protected static LinkedList<Button> buttons = new LinkedList<>();
+    public static Random random = new Random();
+    public static List<Integer> color = new ArrayList<Integer>();
 
-    public OrdersAdapter(List<OrderData> data) {
+
+    public OrdersAdapter(List<Order> data) {
+        buttons.clear();
         this.data = data;
     }
 
@@ -27,6 +37,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_button, parent, false);
+        color.add(parent.getContext().getResources().getColor(R.color.gren));
+        color.add(parent.getContext().getResources().getColor(R.color.red_white));
+        color.add(parent.getContext().getResources().getColor(R.color.blue));
         return new ViewHolder(view);
     }
 
@@ -46,30 +59,28 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             button = (Button) itemView;
-
             button.setOnClickListener(v -> {
                 button.setActivated(true);
                 if (lastBut != null){
                     lastBut.setActivated(false);
                 }
                 lastBut = button;
-                if (ChooseOrderActivity.step == 0){
-                    ChooseOrderActivity.idOrder = button.getId();
-                    ChooseOrderActivity.OrderChoose(button.getText(), data.get(Integer.parseInt((String) button.getText())).getLocation());
+
+                if (gameData.step == "0"){
+                    ChooseOrderActivity.OrderChoose(data.get(buttons.indexOf(button)));
                 }
-                if (ChooseOrderActivity.step == 1) {
-                    ChooseOrderActivity.idTransport = button.getId();
-                    ChooseOrderActivity.OrderTransport(button.getText());
+                if (gameData.step == "1") {
+                    ChooseOrderActivity.OrderTransport(data.get(buttons.indexOf(button)));
                 }
+
             });
         }
-
-        public void bind(OrderData item) {
-            button.setText(item.getName());
+        public void bind(Order item){
+            button.setText(item.name);
             buttons.add(button);
-            Drawable myDrawable = button.getContext().getDrawable(Integer.parseInt(item.getId()));
+            button.setBackgroundColor(color.get(random.nextInt(color.size())));
+            Drawable myDrawable = button.getContext().getDrawable(Integer.parseInt(item.icon));
             button.setCompoundDrawablesWithIntrinsicBounds(null,myDrawable,null,null);
-            //TODO: init item
         }
     }
 }

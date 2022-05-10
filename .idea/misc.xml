@@ -3,13 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/drawable/grid_corners.xml" value="0.1" />
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/drawable/money_aniation.xml" value="0.1" />
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/drawable/person_animation.xml" value="0.122" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/drawable/radius_corners.xml" value="0.12" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/drawable/redius_corners.xml" value="0.12" />
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/drawable/statictic_style.xml" value="0.1335" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/drawable/view_style.xml" value="0.1" />
-        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_delivery.xml" value="0.22" />
-        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_main.xml" value="0.17552083333333332" />
-        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_order.xml" value="0.16018518518518518" />
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_clicker.xml" value="0.22" />
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_delivery.xml" value="0.12" />
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_order.xml" value="0.1" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_transport.xml" value="0.1" />
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/bgimage.xml" value="0.17552083333333332" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/fragment_order.xml" value="0.17552083333333332" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/item_button.xml" value="0.17552083333333332" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/maps_fragment.xml" value="0.17552083333333332" />
