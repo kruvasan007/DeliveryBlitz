@@ -4,14 +4,17 @@ import static com.example.myprojectgame.ui.root.MainActivity.gameData;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.RelativeSizeSpan;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.db.OrderDao;
 import com.example.myprojectgame.db.OrderData;
+import com.example.myprojectgame.ui.click.ClickerActivity;
 import com.example.myprojectgame.ui.root.BaseActivity;
-import com.example.myprojectgame.ui.root.MainActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,13 +43,11 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery);
-        Button backButton = findViewById(R.id.back_button);
         Button nextButton = findViewById(R.id.next_step_button);
         TextView earn = findViewById(R.id.earn);
         TextView wasted = findViewById(R.id.wasted);
         wasted.setText("-"+gameData.cost);
         earn.setText("+"+gameData.earn);
-        backButton.setOnClickListener(v -> backActivity());
         nextButton.setOnClickListener(v -> nextActivity());
         dao = App.getAppDatabaseInstance().orderDao();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -55,16 +56,13 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     }
 
     private void nextActivity() {
-        ClickerActivity.setStart(currentCoord, gameData.k);
-        Intent intent = new Intent(DeliveryActivity.this, ClickerActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    private void backActivity() {
-        Intent intent = new Intent(DeliveryActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        if (currentCoord == null) makeToastSize("Выберите ресторан");
+        else {
+            ClickerActivity.setStart(currentCoord, gameData.k);
+            Intent intent = new Intent(DeliveryActivity.this, ClickerActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override
@@ -92,19 +90,27 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         uiSettings.setCompassEnabled(false);
 
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) marker -> {
-            currentCoord = new ArrayList<Double>();
-            currentCoord.add(marker.getPosition().latitude);
-            currentCoord.add(marker.getPosition().longitude);
-            System.out.println(currentCoord.toString());
-            if (prevMarker != null) {
-                prevMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-            }
-            if (!marker.equals(prevMarker)) {
-                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            if (!gamer.equals(marker.getPosition())) {
+                currentCoord = new ArrayList<Double>();
+                currentCoord.add(marker.getPosition().latitude);
+                currentCoord.add(marker.getPosition().longitude);
+                if (prevMarker != null) {
+                    prevMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                }
+                if (!marker.equals(prevMarker)) {
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                    prevMarker = marker;
+                }
                 prevMarker = marker;
             }
-            prevMarker = marker;
             return false;
         });
+    }
+
+    private void makeToastSize(String t) {
+        String text = t;
+        SpannableStringBuilder biggerText = new SpannableStringBuilder(text);
+        biggerText.setSpan(new RelativeSizeSpan(0.7f), 0, text.length(), 0);
+        Toast.makeText(this, biggerText, Toast.LENGTH_LONG).show();
     }
 }

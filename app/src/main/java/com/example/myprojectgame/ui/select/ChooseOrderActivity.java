@@ -4,6 +4,8 @@ import static com.example.myprojectgame.ui.root.MainActivity.gameData;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,6 +32,9 @@ public class ChooseOrderActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         dao = App.getAppDatabaseInstance().orderDao();
+        gameData.order = "";
+        gameData.transport = "";
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.MainContainer, new OrderFragment()).commit();
         recyclerLayout = findViewById(R.id.recycler_layout);
@@ -43,23 +48,18 @@ public class ChooseOrderActivity extends BaseActivity {
                     buttonNext.setText("Подтвердить транспорт");
                     gameData.step = "1";
                     nextStep();
-                } else Toast.makeText(this, "Пожалуйста,выберите заказ", Toast.LENGTH_SHORT).show();
+                } else makeToastSize("Пожалуйста,выберите заказ");
 
             } else {
-                gameData.money -= gameData.cost;
-                nextActivity();
+                if (!gameData.transport.equals("")) {
+                    gameData.money -= gameData.cost;
+                    nextActivity();
+                } else makeToastSize("Пожалуйста,выберите транспорт");
             }
         });
 
         buttonClose.setOnClickListener(v -> closeButton());
     }
-
-    private void nextActivity() {
-        Intent intent = new Intent(ChooseOrderActivity.this, DeliveryActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
 
     public static void OrderChoose(Order data) {
         textView.setText("Вы заработаете: " + data.costs);
@@ -89,5 +89,21 @@ public class ChooseOrderActivity extends BaseActivity {
             Log.e("E", "Error");
         }
     }
+
+    private void nextActivity() {
+        Intent intent = new Intent(ChooseOrderActivity.this, DeliveryActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void makeToastSize(String t) {
+        String text = t;
+        SpannableStringBuilder biggerText = new SpannableStringBuilder(text);
+        biggerText.setSpan(new RelativeSizeSpan(0.7f), 0, text.length(), 0);
+        Toast.makeText(this, biggerText, Toast.LENGTH_LONG).show();
+    }
+
+
+
 
 }

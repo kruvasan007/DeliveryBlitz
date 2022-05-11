@@ -16,21 +16,42 @@ import com.example.myprojectgame.ui.select.ChooseOrderActivity;
 
 public class MainActivity extends BaseActivity {
     private OrderDao dao;
-    private boolean firstStart = false;
 
-    private static TextView textMoney;
+    private static TextView textMoney, textHealth, textEx;
     public static GameData gameData;
+    private SharedPreferences sh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         int money = sh.getInt("money", 100);
         int health = sh.getInt("health", 100);
         int exp = sh.getInt("exp", 0);
         gameData = new GameData(money,health,exp);
         setContentView(R.layout.activity_main);
-        if (firstStart) {
+        Button buttonStart = findViewById(R.id.select_button);
+        buttonStart.setOnClickListener(v -> startButton());
+
+        textMoney = findViewById(R.id.money);
+        textHealth = findViewById(R.id.health);
+        textEx = findViewById(R.id.exp);
+        textMoney.setText(String.valueOf(gameData.money));
+        textHealth.setText(String.valueOf(gameData.health));
+        textEx.setText(String.valueOf(gameData.exp));
+    }
+
+    private void startButton(){
+            Intent intent = new Intent(MainActivity.this, ChooseOrderActivity.class);
+            startActivity(intent);
+            finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (sh.getBoolean("firstrun", true)) {
             dao = App.getAppDatabaseInstance().orderDao();
             dao.insertOrder(new OrderData("MCDONALDS","55.02926001110971, 82.93647034818923",""+R.drawable.mcdonalds,25));
             dao.insertOrder(new OrderData("MCDONALDS","55.03963005768076, 82.96122777648965",""+R.drawable.mcdonalds,10));
@@ -42,17 +63,7 @@ public class MainActivity extends BaseActivity {
             dao.insertTransport(new TransportData("BUS",50,""+R.drawable.bus,0.7d));
             dao.insertTransport(new TransportData("WALKING",0,""+R.drawable.walking,1.0d));
             dao.insertTransport(new TransportData("METRO",100,""+R.drawable.train,0.4d));
+            sh.edit().putBoolean("firstrun", false).commit();
         }
-        Button buttonStart = findViewById(R.id.select_button);
-        buttonStart.setOnClickListener(v -> startButton());
-
-        textMoney = findViewById(R.id.money);
-        textMoney.setText(String.valueOf(gameData.money));
-    }
-
-    private void startButton(){
-            Intent intent = new Intent(MainActivity.this, ChooseOrderActivity.class);
-            startActivity(intent);
-            finish();
     }
 }

@@ -1,4 +1,4 @@
-package com.example.myprojectgame.ui;
+package com.example.myprojectgame.ui.click;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
