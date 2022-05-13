@@ -13,7 +13,6 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getSupportActionBar().hide();
     }
 
@@ -22,12 +21,13 @@ public class BaseActivity extends AppCompatActivity {
         super.onPause();
         SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
-
         myEdit.putInt("money", gameData.money);
         myEdit.putInt("health", gameData.health);
         myEdit.putInt("exp", gameData.exp);
+        myEdit.putInt("state",gameData.state);
+        myEdit.putLong("time",gameData.time);
+        myEdit.putString("coord",gameData.gamerCoord.get(0).toString()+" "+gameData.gamerCoord.get(1).toString());
+        myEdit.putString("lastActivity", getClass().getName());
         myEdit.apply();
-
     }
-
 }

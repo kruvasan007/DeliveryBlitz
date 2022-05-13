@@ -24,6 +24,7 @@ import com.example.myprojectgame.ui.root.MainActivity;
 public class ChooseOrderActivity extends BaseActivity {
     private static TextView textView;
     private RecyclerView recyclerLayout;
+    private static int xp;
 
     private OrderDao dao;
 
@@ -45,7 +46,6 @@ public class ChooseOrderActivity extends BaseActivity {
         buttonNext.setOnClickListener(v -> {
             if (gameData.step.equals("0")) {
                 if (!gameData.order.equals("")) {
-                    buttonNext.setText("Подтвердить транспорт");
                     gameData.step = "1";
                     nextStep();
                 } else makeToastSize("Пожалуйста,выберите заказ");
@@ -53,6 +53,7 @@ public class ChooseOrderActivity extends BaseActivity {
             } else {
                 if (!gameData.transport.equals("")) {
                     gameData.money -= gameData.cost;
+                    gameData.exp += xp;
                     nextActivity();
                 } else makeToastSize("Пожалуйста,выберите транспорт");
             }
@@ -62,20 +63,19 @@ public class ChooseOrderActivity extends BaseActivity {
     }
 
     public static void OrderChoose(Order data) {
-        textView.setText("Вы заработаете: " + data.costs);
         gameData.order = data.name;
         gameData.earn = data.costs;
+        xp = data.exp;
     }
 
     public static void OrderTransport(Order data) {
-        textView.setText("Стоимость проезда: " + data.costs);
         gameData.transport = data.name;
         gameData.cost = data.costs;
         gameData.k = data.k;
     }
 
     private void nextStep() {
-        textView.setText("");
+        textView.setText("Выберите транспорт");
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .replace(R.id.MainContainer, new OrderFragment()).commit();
     }

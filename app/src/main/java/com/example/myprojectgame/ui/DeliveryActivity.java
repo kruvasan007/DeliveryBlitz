@@ -3,6 +3,10 @@ package com.example.myprojectgame.ui;
 import static com.example.myprojectgame.ui.root.MainActivity.gameData;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
@@ -20,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -35,19 +40,21 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     private ArrayList<List<Float>> coords;
     private List<OrderData> RelativeOrder;
     private LatLng shop;
-    private List<Double> currentCoord;
     private OrderDao dao;
     private Marker prevMarker;
+    private List<Double> currentCoord;
+    private int time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery);
+        time = 0;
         Button nextButton = findViewById(R.id.next_step_button);
         TextView earn = findViewById(R.id.earn);
         TextView wasted = findViewById(R.id.wasted);
-        wasted.setText("-"+gameData.cost);
-        earn.setText("+"+gameData.earn);
+        wasted.setText("-" + gameData.cost);
+        earn.setText("+" + gameData.earn);
         nextButton.setOnClickListener(v -> nextActivity());
         dao = App.getAppDatabaseInstance().orderDao();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -56,9 +63,10 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     }
 
     private void nextActivity() {
-        if (currentCoord == null) makeToastSize("Выберите ресторан");
+        if (time == 0) makeToastSize("Выберите ресторан");
         else {
-            ClickerActivity.setStart(currentCoord, gameData.k);
+            gameData.gamerCoord = currentCoord;
+            ClickerActivity.setStart(currentCoord, gameData.k, time);
             Intent intent = new Intent(DeliveryActivity.this, ClickerActivity.class);
             startActivity(intent);
             finish();
@@ -71,16 +79,17 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         coords = new ArrayList<List<Float>>();
         System.out.println(gameData.order);
         RelativeOrder = dao.getByName(gameData.order);
+        BitmapDescriptor iconShop = getIconFromDrawables(getDrawable(Integer.parseInt(RelativeOrder.get(0).icon)));
         LatLng gamer = new LatLng(gameData.gamerCoord.get(0), gameData.gamerCoord.get(1));
-        mMap.addMarker(new MarkerOptions().draggable(false).position(gamer).title("ВЫ НАХОДИТЕСЬ ЗДЕСЬ"));
+        mMap.addMarker(new MarkerOptions().draggable(false).position(gamer).title("ВЫ НАХОДИТЕСЬ ЗДЕСЬ").icon(getIconFromDrawables(getDrawable(R.drawable.bus))));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(gamer));
-        for (OrderData order: RelativeOrder) {
+        for (OrderData order : RelativeOrder) {
             String[] o = order.coordinates.split(",");
             List<Float> or = new ArrayList<Float>();
             or.add(Float.parseFloat(o[0]));
             or.add(Float.parseFloat(o[1]));
             coords.add(or);
-            mMap.addMarker(new MarkerOptions().position(new LatLng(or.get(0), or.get(1))).title(order.name));
+            if (Float.parseFloat(String.valueOf(gameData.gamerCoord.get(0))) != or.get(0)) mMap.addMarker(new MarkerOptions().position(new LatLng(or.get(0), or.get(1))).title(order.name).icon(iconShop));
         }
         mMap.moveCamera(CameraUpdateFactory.zoomTo(13f));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(gamer));
@@ -91,17 +100,14 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
 
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) marker -> {
             if (!gamer.equals(marker.getPosition())) {
+                float[] results = new float[1];
                 currentCoord = new ArrayList<Double>();
                 currentCoord.add(marker.getPosition().latitude);
                 currentCoord.add(marker.getPosition().longitude);
-                if (prevMarker != null) {
-                    prevMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                }
-                if (!marker.equals(prevMarker)) {
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-                    prevMarker = marker;
-                }
-                prevMarker = marker;
+                Location.distanceBetween(gamer.latitude, gamer.longitude,
+                                marker.getPosition().latitude, marker.getPosition().longitude, results);
+                time = (int) (results[0] / (4 / 3.6) * gameData.k) ;
+                marker.setTitle(time / 60 + " мин");
             }
             return false;
         });
@@ -112,5 +118,14 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         SpannableStringBuilder biggerText = new SpannableStringBuilder(text);
         biggerText.setSpan(new RelativeSizeSpan(0.7f), 0, text.length(), 0);
         Toast.makeText(this, biggerText, Toast.LENGTH_LONG).show();
+    }
+
+    private BitmapDescriptor getIconFromDrawables(Drawable drawable) {
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }

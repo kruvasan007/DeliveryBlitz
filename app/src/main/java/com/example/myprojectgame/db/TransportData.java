@@ -21,7 +21,7 @@ public class TransportData {
     }
 
     public Order fromTransportToOrder(){
-        return new Order(name,"none",icon, costs,k);
+        return new Order(name,"none",icon, costs,0,k);
     }
 
 }

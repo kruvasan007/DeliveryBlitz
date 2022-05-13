@@ -8,15 +8,17 @@ public class Order {
     public String icon;
     public Double k;
     public int costs;
+    public int exp;
 
-    public Order(String name, String coordinates, String icon, int costs) {
+    public Order(String name, String coordinates, String icon, int costs,int exp) {
         this.name = name;
         this.icon = icon;
         this.coordinates = coordinates;
         this.costs = costs;
+        this.exp = exp;
     }
-    public Order(String name, String coordinates, String icon, int costs, Double k) {
-        this(name,coordinates,icon,costs);
+    public Order(String name, String coordinates, String icon, int costs, int exp, Double k) {
+        this(name,coordinates,icon,costs,exp);
         this.k = k;
     }
 }

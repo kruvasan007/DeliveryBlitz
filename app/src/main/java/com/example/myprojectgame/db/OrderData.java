@@ -12,16 +12,18 @@ public class OrderData {
     public String coordinates;
     public String icon;
     public int cost;
+    public int exp;
 
-    public OrderData(String name, String coordinates, String icon, int cost) {
+    public OrderData(String name, String coordinates, String icon, int cost, int exp) {
         this.name = name;
         this.icon = icon;
         this.coordinates = coordinates;
         this.cost = cost;
+        this.exp = exp;
     }
 
     public Order fromOrderstoOrder(){
-        return new Order(name,coordinates,icon,cost);
+        return new Order(name,coordinates,icon,cost,exp);
     }
     public String getCoordinates() { return this.coordinates;}
 }

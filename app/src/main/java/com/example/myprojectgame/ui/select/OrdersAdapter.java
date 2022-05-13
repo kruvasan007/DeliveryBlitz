@@ -6,9 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojectgame.R;
@@ -21,14 +23,14 @@ import java.util.Random;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
     public static List<Order> data;
-    protected static Button lastBut;
-    protected static LinkedList<Button> buttons = new LinkedList<>();
+    protected static ConstraintLayout lastBut;
+    protected static LinkedList<ConstraintLayout> cards = new LinkedList<>();
     public static Random random = new Random();
     public static List<Integer> color = new ArrayList<Integer>();
 
 
     public OrdersAdapter(List<Order> data) {
-        buttons.clear();
+        cards.clear();
         this.data = data;
     }
 
@@ -54,33 +56,43 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final Button button;
+        private final ConstraintLayout card;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            button = (Button) itemView;
-            button.setOnClickListener(v -> {
-                button.setActivated(true);
+            card = (ConstraintLayout) itemView;
+            card.setOnClickListener(v -> {
+                card.setBackground(card.getContext().getDrawable(R.drawable.not_activated_constraint_style));
                 if (lastBut != null){
-                    lastBut.setActivated(false);
+                    lastBut.setBackground(card.getContext().getDrawable(R.drawable.constraint_style));
                 }
-                lastBut = button;
-
+                lastBut = card;
                 if (gameData.step == "0"){
-                    ChooseOrderActivity.OrderChoose(data.get(buttons.indexOf(button)));
+                    ChooseOrderActivity.OrderChoose(data.get(cards.indexOf(card)));
                 }
                 if (gameData.step == "1") {
-                    ChooseOrderActivity.OrderTransport(data.get(buttons.indexOf(button)));
+                    ChooseOrderActivity.OrderTransport(data.get(cards.indexOf(card)));
                 }
 
             });
         }
         public void bind(Order item){
-            button.setText(item.name);
-            buttons.add(button);
-            button.setBackgroundColor(color.get(random.nextInt(color.size())));
-            Drawable myDrawable = button.getContext().getDrawable(Integer.parseInt(item.icon));
-            button.setCompoundDrawablesWithIntrinsicBounds(null,myDrawable,null,null);
+            TextView name = card.findViewById(R.id.name);
+            TextView earn = card.findViewById(R.id.earn);
+            TextView exp = card.findViewById(R.id.exp);
+            ImageView icon = card.findViewById(R.id.icon);
+            name.setText(item.name);
+            cards.add(card);
+            card.setClipToOutline(true);
+            exp.setText(item.exp+" xp");
+            earn.setText(item.costs+" руб.");
+            if (item.k != null) {
+                exp.setCompoundDrawables(card.getContext().getDrawable(R.drawable.heart),null,null,null);
+                exp.setText(item.k+"мин.");
+            }
+            Drawable myDrawable = card.getContext().getDrawable(Integer.parseInt(item.icon));
+            icon.setImageDrawable(myDrawable);
+            card.setBackground(card.getContext().getDrawable(R.drawable.constraint_style));
         }
     }
 }

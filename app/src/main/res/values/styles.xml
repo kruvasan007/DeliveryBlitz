@@ -7,5 +7,6 @@
     </style>
     <style name="FrameStyle" parent="Theme.MyProjectGame">
         <item name="cornerRadius">16dp</item>
+        <item name="background">@color/blue</item>
     </style>
 </resources>
