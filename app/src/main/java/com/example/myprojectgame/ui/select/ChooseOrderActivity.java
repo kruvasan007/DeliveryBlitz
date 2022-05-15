@@ -52,9 +52,12 @@ public class ChooseOrderActivity extends BaseActivity {
 
             } else {
                 if (!gameData.transport.equals("")) {
-                    gameData.money -= gameData.cost;
-                    gameData.exp += xp;
-                    nextActivity();
+                    if ( gameData.money - gameData.cost >= 0){
+                        gameData.exp += xp;
+                        gameData.step = "0";
+                        nextActivity();
+                    }
+                    else makeToastSize("У вас недостаточно средств");
                 } else makeToastSize("Пожалуйста,выберите транспорт");
             }
         });

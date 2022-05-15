@@ -35,6 +35,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.shop.ShopActivity"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.click.ClickerActivity"
             android:exported="true">
             <intent-filter>

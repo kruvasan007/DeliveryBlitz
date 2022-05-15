@@ -27,7 +27,6 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -39,9 +38,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     private UiSettings uiSettings;
     private ArrayList<List<Float>> coords;
     private List<OrderData> RelativeOrder;
-    private LatLng shop;
     private OrderDao dao;
-    private Marker prevMarker;
     private List<Double> currentCoord;
     private int time;
 
@@ -65,8 +62,10 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     private void nextActivity() {
         if (time == 0) makeToastSize("Выберите ресторан");
         else {
+            gameData.money -= gameData.cost;
             gameData.gamerCoord = currentCoord;
-            ClickerActivity.setStart(currentCoord, gameData.k, time);
+            gameData.time = time;
+            gameData.health -= 10;
             Intent intent = new Intent(DeliveryActivity.this, ClickerActivity.class);
             startActivity(intent);
             finish();
@@ -106,8 +105,9 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
                 currentCoord.add(marker.getPosition().longitude);
                 Location.distanceBetween(gamer.latitude, gamer.longitude,
                                 marker.getPosition().latitude, marker.getPosition().longitude, results);
-                time = (int) (results[0] / (4 / 3.6) * gameData.k) ;
-                marker.setTitle(time / 60 + " мин");
+                time = (int) (results[0] / ( 60 * (4 / 3.6) *(2-gameData.k)) * (gameData.exp/5) );
+                if (time < 60) marker.setTitle(time + " сек.");
+                else marker.setTitle(time / 60 + " мин.");
             }
             return false;
         });

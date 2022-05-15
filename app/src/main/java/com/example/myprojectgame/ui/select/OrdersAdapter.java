@@ -63,7 +63,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             card = (ConstraintLayout) itemView;
             card.setOnClickListener(v -> {
                 card.setBackground(card.getContext().getDrawable(R.drawable.not_activated_constraint_style));
-                if (lastBut != null){
+                if (lastBut != null && lastBut != card){
                     lastBut.setBackground(card.getContext().getDrawable(R.drawable.constraint_style));
                 }
                 lastBut = card;
@@ -88,7 +88,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             earn.setText(item.costs+" руб.");
             if (item.k != null) {
                 exp.setCompoundDrawables(card.getContext().getDrawable(R.drawable.heart),null,null,null);
-                exp.setText(item.k+"мин.");
+                exp.setText((float)(1-item.k+1)+"x");
             }
             Drawable myDrawable = card.getContext().getDrawable(Integer.parseInt(item.icon));
             icon.setImageDrawable(myDrawable);

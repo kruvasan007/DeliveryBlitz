@@ -47,7 +47,7 @@ public class OrderFragment extends Fragment {
     private void getOrderData() {
         dao = App.getAppDatabaseInstance().orderDao();
         List<OrderData> select = dao.selectOrder();
-        for ( OrderData order: select) data.add(order.fromOrderstoOrder());
+        for ( int i = 0; i <= (gameData.exp/100 + 1);i++) data.add(select.get(i).fromOrderstoOrder());
     }
 
     private void getTransportData() {

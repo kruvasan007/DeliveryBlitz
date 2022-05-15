@@ -26,6 +26,7 @@ public class BaseActivity extends AppCompatActivity {
         myEdit.putInt("exp", gameData.exp);
         myEdit.putInt("state",gameData.state);
         myEdit.putLong("time",gameData.time);
+        myEdit.putInt("progress",gameData.progress);
         myEdit.putString("coord",gameData.gamerCoord.get(0).toString()+" "+gameData.gamerCoord.get(1).toString());
         myEdit.putString("lastActivity", getClass().getName());
         myEdit.apply();

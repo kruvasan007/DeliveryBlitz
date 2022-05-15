@@ -17,6 +17,9 @@ public interface OrderDao {
     @Query("SELECT * FROM TransportData")
     List<TransportData> selectTransport();
 
+    @Query("SELECT * FROM FoodData")
+    List<FoodData> selectFood();
+
     @Query("SELECT * FROM OrderData WHERE name = :selectName")
     List<OrderData> getByName(String selectName);
 
@@ -25,6 +28,9 @@ public interface OrderDao {
 
     @Insert
     long insertTransport(TransportData transportData);
+
+    @Insert
+    long insertFood(FoodData foodData);
 
     @Update
     void update(OrderData orderData);

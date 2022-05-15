@@ -17,8 +17,9 @@ public class GameData {
     public List<Double> gamerCoord;
     public int state;
     public long time;
+    public int progress;
 
-    public GameData(int money, int health, int exp, List<Double> coord) {
+    public GameData(int money, int health, int exp, List<Double> coord, int prog, long t, int s) {
         this.money = money;
         this.health = health;
         this.k = 0.0;
@@ -26,9 +27,10 @@ public class GameData {
         this.transport = "";
         gamerCoord = coord;
         this.step = "0";
-        this.state = 0;
+        this.progress = prog;
+        this.state = s;
         this.order = "";
-        this.time = 0;
+        this.time = t;
     }
 
 }

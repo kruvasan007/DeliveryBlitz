@@ -15,14 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.ui.root.BaseActivity;
 import com.example.myprojectgame.ui.root.MainActivity;
 
-import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -39,9 +36,6 @@ public class ClickerActivity extends BaseActivity {
     private long firstTime;
     private MyTimer myTimerTask;
     private Timer mTimer;
-    private static final int NOTIFY_ID = 101;
-    private static String CHANNEL_ID = "Channel";
-    private static int time;
     private static int damage;
 
     @SuppressLint({"ClickableViewAccessibility", "ResourceAsColor"})
@@ -49,10 +43,11 @@ public class ClickerActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clicker);
+        setStart();
         onStartTimer();
         gameData.state = 1;
         prograssBar = (ProgressBar) findViewById(R.id.progressBar);
-        prograssBar.setMax(time);
+        prograssBar.setMax((int) gameData.time-2);
         descr = findViewById(R.id.descr);
         timer = findViewById(R.id.timer);
         personImage = (ImageView) findViewById(R.id.image_view);
@@ -87,21 +82,9 @@ public class ClickerActivity extends BaseActivity {
         personImage.setOnClickListener(v -> clickAnimation());
     }
 
-    public static void setStart(List<Double> cord, Double k, int t) {
+    public void setStart() {
         Random random = new Random();
         damage = random.nextInt(10);
-        time = (int) t ;
-        System.out.println(k);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     private void startAnim() {
@@ -112,7 +95,6 @@ public class ClickerActivity extends BaseActivity {
             fastAnimation.start();
         }
     }
-
     private void clickAnimation() {
         clickCounter++;
         firstTime -= 1000;
@@ -133,7 +115,7 @@ public class ClickerActivity extends BaseActivity {
     }
 
     private void onStartTimer() {
-        firstTime = System.currentTimeMillis() + time * 1000;
+        firstTime = System.currentTimeMillis() + gameData.time * 1000;
         mTimer = new Timer();
         myTimerTask = new MyTimer();
         mTimer.schedule(myTimerTask, 1000, 1000);
@@ -145,25 +127,18 @@ public class ClickerActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    long currentTime = firstTime - System.currentTimeMillis() - 1000;
+
+                    gameData.time = firstTime - System.currentTimeMillis() - 1000;
                     @SuppressLint("DefaultLocale") String strDate = String.format("%d:%d",
-                            TimeUnit.MILLISECONDS.toMinutes(currentTime),
-                            TimeUnit.MILLISECONDS.toSeconds(currentTime) -
-                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime))
+                            TimeUnit.MILLISECONDS.toMinutes(gameData.time),
+                            TimeUnit.MILLISECONDS.toSeconds(gameData.time) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(gameData.time))
                     );
-                    timer.setText(strDate);
+                    gameData.time /= 1000;
                     prograssBar.setProgress(prograssBar.getProgress() + 1);
-                    if (prograssBar.getProgress() >= time) {
+                    gameData.progress = prograssBar.getProgress();
+                    if (gameData.time <= 0) {
                         gameData.state = 0;
-                        NotificationCompat.Builder builder =
-                                new NotificationCompat.Builder(ClickerActivity.this, CHANNEL_ID)
-                                        .setSmallIcon(R.mipmap.new_icon)
-                                        .setContentTitle("Курьер прибыл!")
-                                        .setContentText("Пора забрать вознаграждение!")
-                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-                        NotificationManagerCompat notificationManager =
-                                NotificationManagerCompat.from(ClickerActivity.this);
-                        notificationManager.notify(NOTIFY_ID, builder.build());
                         mTimer.cancel();
                         myTimerTask.cancel();
                         makeToastSize("Доставка выполнена успешно");
@@ -172,6 +147,8 @@ public class ClickerActivity extends BaseActivity {
                         startActivity(intent);
                         finish();
                     }
+                    else timer.setText(strDate);
+
                 }
             });
         }
