@@ -1,12 +1,12 @@
 package com.example.myprojectgame.ui.select;
 
 import static com.example.myprojectgame.ui.root.MainActivity.gameData;
+import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,14 +17,13 @@ import com.example.myprojectgame.R;
 import com.example.myprojectgame.db.Order;
 import com.example.myprojectgame.db.OrderDao;
 import com.example.myprojectgame.ui.App;
-import com.example.myprojectgame.ui.DeliveryActivity;
+import com.example.myprojectgame.ui.Delivery.DeliveryActivity;
+import com.example.myprojectgame.ui.click.ClickerActivity;
 import com.example.myprojectgame.ui.root.BaseActivity;
-import com.example.myprojectgame.ui.root.MainActivity;
 
 public class ChooseOrderActivity extends BaseActivity {
     private static TextView textView;
     private RecyclerView recyclerLayout;
-    private static int xp;
 
     private OrderDao dao;
 
@@ -33,8 +32,6 @@ public class ChooseOrderActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         dao = App.getAppDatabaseInstance().orderDao();
-        gameData.order = "";
-        gameData.transport = "";
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.MainContainer, new OrderFragment()).commit();
@@ -44,57 +41,31 @@ public class ChooseOrderActivity extends BaseActivity {
         Button buttonNext = findViewById(R.id.next_step_button);
 
         buttonNext.setOnClickListener(v -> {
-            if (gameData.step.equals("0")) {
-                if (!gameData.order.equals("")) {
-                    gameData.step = "1";
-                    nextStep();
-                } else makeToastSize("Пожалуйста,выберите заказ");
-
-            } else {
-                if (!gameData.transport.equals("")) {
-                    if ( gameData.money - gameData.cost >= 0){
-                        gameData.exp += xp;
-                        gameData.step = "0";
+                if (selectOrderData.k != 0) {
+                    if ( gameData.money - selectOrderData.costDelivery >= 0){
+                        gameData.health -= 10;
+                        selectOrderData.currentTime = (long) (selectOrderData.currentTime/(2-selectOrderData.k));
                         nextActivity();
                     }
                     else makeToastSize("У вас недостаточно средств");
                 } else makeToastSize("Пожалуйста,выберите транспорт");
-            }
-        });
+            });
 
         buttonClose.setOnClickListener(v -> closeButton());
     }
-
-    public static void OrderChoose(Order data) {
-        gameData.order = data.name;
-        gameData.earn = data.costs;
-        xp = data.exp;
-    }
-
     public static void OrderTransport(Order data) {
-        gameData.transport = data.name;
-        gameData.cost = data.costs;
-        gameData.k = data.k;
-    }
-
-    private void nextStep() {
-        textView.setText("Выберите транспорт");
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.MainContainer, new OrderFragment()).commit();
+        selectOrderData.costDelivery = data.costs;
+        selectOrderData.k = data.k;
     }
 
     private void closeButton() {
-        try {
-            Intent intent = new Intent(ChooseOrderActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        } catch (Exception e) {
-            Log.e("E", "Error");
-        }
+        Intent intent = new Intent(ChooseOrderActivity.this, DeliveryActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void nextActivity() {
-        Intent intent = new Intent(ChooseOrderActivity.this, DeliveryActivity.class);
+        Intent intent = new Intent(ChooseOrderActivity.this, ClickerActivity.class);
         startActivity(intent);
         finish();
     }
@@ -105,8 +76,4 @@ public class ChooseOrderActivity extends BaseActivity {
         biggerText.setSpan(new RelativeSizeSpan(0.7f), 0, text.length(), 0);
         Toast.makeText(this, biggerText, Toast.LENGTH_LONG).show();
     }
-
-
-
-
 }

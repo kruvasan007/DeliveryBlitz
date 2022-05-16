@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,11 @@ public class MyDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_fragment,container,false);
+        View view = inflater.inflate(R.layout.dialog_fragment,container,false);
+        Button closeButton = view.findViewById(R.id.close_button);
+        closeButton.setOnClickListener(v -> {
+            dismiss();
+        });
+        return view;
     }
 }

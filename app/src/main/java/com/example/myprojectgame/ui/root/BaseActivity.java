@@ -1,7 +1,9 @@
 package com.example.myprojectgame.ui.root;
 
 import static com.example.myprojectgame.ui.root.MainActivity.gameData;
+import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -24,11 +26,20 @@ public class BaseActivity extends AppCompatActivity {
         myEdit.putInt("money", gameData.money);
         myEdit.putInt("health", gameData.health);
         myEdit.putInt("exp", gameData.exp);
-        myEdit.putInt("state",gameData.state);
-        myEdit.putLong("time",gameData.time);
-        myEdit.putInt("progress",gameData.progress);
+        myEdit.putInt("currentExp", selectOrderData.addExp);
+        myEdit.putLong("currentTime",selectOrderData.currentTime);
+        myEdit.putInt("currentProgress",selectOrderData.currentProgress);
+        myEdit.putInt("currentCost",selectOrderData.costDelivery);
+        myEdit.putInt("currentEarn",selectOrderData.earnFomOrder);
         myEdit.putString("coord",gameData.gamerCoord.get(0).toString()+" "+gameData.gamerCoord.get(1).toString());
         myEdit.putString("lastActivity", getClass().getName());
         myEdit.apply();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

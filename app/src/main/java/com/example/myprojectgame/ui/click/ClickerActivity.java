@@ -1,6 +1,7 @@
 package com.example.myprojectgame.ui.click;
 
 import static com.example.myprojectgame.ui.root.MainActivity.gameData;
+import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.example.myprojectgame.R;
+import com.example.myprojectgame.db.SelectOrderData;
 import com.example.myprojectgame.ui.root.BaseActivity;
 import com.example.myprojectgame.ui.root.MainActivity;
 
@@ -45,15 +47,13 @@ public class ClickerActivity extends BaseActivity {
         setContentView(R.layout.activity_clicker);
         setStart();
         onStartTimer();
-        gameData.state = 1;
         prograssBar = (ProgressBar) findViewById(R.id.progressBar);
-        prograssBar.setMax((int) gameData.time-2);
+        prograssBar.setMax((int) selectOrderData.currentTime-2);
         descr = findViewById(R.id.descr);
         timer = findViewById(R.id.timer);
         personImage = (ImageView) findViewById(R.id.image_view);
         personAnimation = (AnimationDrawable) personImage.getBackground();
-
-        if (damage == 3) createDialogAccident();
+        if (damage == 3 && gameData.exp > 50) createDialogAccident();
         clickCounter = 0;
         personAnimation.start();
         fastpersonAnimation = new AnimationDrawable();
@@ -115,7 +115,7 @@ public class ClickerActivity extends BaseActivity {
     }
 
     private void onStartTimer() {
-        firstTime = System.currentTimeMillis() + gameData.time * 1000;
+        firstTime = System.currentTimeMillis() + selectOrderData.currentTime * 1000;
         mTimer = new Timer();
         myTimerTask = new MyTimer();
         mTimer.schedule(myTimerTask, 1000, 1000);
@@ -127,22 +127,22 @@ public class ClickerActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
-                    gameData.time = firstTime - System.currentTimeMillis() - 1000;
-                    @SuppressLint("DefaultLocale") String strDate = String.format("%d:%d",
-                            TimeUnit.MILLISECONDS.toMinutes(gameData.time),
-                            TimeUnit.MILLISECONDS.toSeconds(gameData.time) -
-                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(gameData.time))
+                    selectOrderData.currentTime = firstTime - System.currentTimeMillis() - 1000;
+                    @SuppressLint("DefaultLocale") String strDate = String.format("%02d:%02d",
+                            TimeUnit.MILLISECONDS.toMinutes(selectOrderData.currentTime),
+                            TimeUnit.MILLISECONDS.toSeconds(selectOrderData.currentTime) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(selectOrderData.currentTime))
                     );
-                    gameData.time /= 1000;
+                    selectOrderData.currentTime /= 1000;
                     prograssBar.setProgress(prograssBar.getProgress() + 1);
-                    gameData.progress = prograssBar.getProgress();
-                    if (gameData.time <= 0) {
-                        gameData.state = 0;
+                    selectOrderData.currentProgress = prograssBar.getProgress();
+                    if (selectOrderData.currentTime <= 0) {
                         mTimer.cancel();
                         myTimerTask.cancel();
                         makeToastSize("Доставка выполнена успешно");
-                        gameData.money += gameData.earn;
+                        gameData.money += selectOrderData.earnFomOrder;
+                        gameData.exp += selectOrderData.addExp;
+                        selectOrderData = new SelectOrderData(0,0,0,0,0);
                         Intent intent = new Intent(ClickerActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

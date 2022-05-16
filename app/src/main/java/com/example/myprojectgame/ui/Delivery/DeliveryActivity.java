@@ -1,6 +1,7 @@
-package com.example.myprojectgame.ui;
+package com.example.myprojectgame.ui.Delivery;
 
 import static com.example.myprojectgame.ui.root.MainActivity.gameData;
+import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,14 +12,15 @@ import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.db.OrderDao;
 import com.example.myprojectgame.db.OrderData;
-import com.example.myprojectgame.ui.click.ClickerActivity;
+import com.example.myprojectgame.ui.App;
 import com.example.myprojectgame.ui.root.BaseActivity;
+import com.example.myprojectgame.ui.root.MainActivity;
+import com.example.myprojectgame.ui.select.ChooseOrderActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,36 +39,41 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private UiSettings uiSettings;
     private ArrayList<List<Float>> coords;
-    private List<OrderData> RelativeOrder;
     private OrderDao dao;
-    private List<Double> currentCoord;
     private int time;
+    private List<Double> currentCoord;
+    private LatLng gamer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery);
-        time = 0;
+
         Button nextButton = findViewById(R.id.next_step_button);
-        TextView earn = findViewById(R.id.earn);
-        TextView wasted = findViewById(R.id.wasted);
-        wasted.setText("-" + gameData.cost);
-        earn.setText("+" + gameData.earn);
         nextButton.setOnClickListener(v -> nextActivity());
+
+        Button backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(v -> backActivity());
+
         dao = App.getAppDatabaseInstance().orderDao();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+    }
+
+    private void backActivity() {
+        Intent intent = new Intent(DeliveryActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void nextActivity() {
-        if (time == 0) makeToastSize("Выберите ресторан");
+        if (selectOrderData.earnFomOrder == 0) makeToastSize("Выберите ресторан");
         else {
-            gameData.money -= gameData.cost;
             gameData.gamerCoord = currentCoord;
-            gameData.time = time;
-            gameData.health -= 10;
-            Intent intent = new Intent(DeliveryActivity.this, ClickerActivity.class);
+            selectOrderData.currentTime = time;
+            Intent intent = new Intent(DeliveryActivity.this, ChooseOrderActivity.class);
             startActivity(intent);
             finish();
         }
@@ -75,27 +82,21 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        coords = new ArrayList<List<Float>>();
-        System.out.println(gameData.order);
-        RelativeOrder = dao.getByName(gameData.order);
-        BitmapDescriptor iconShop = getIconFromDrawables(getDrawable(Integer.parseInt(RelativeOrder.get(0).icon)));
-        LatLng gamer = new LatLng(gameData.gamerCoord.get(0), gameData.gamerCoord.get(1));
-        mMap.addMarker(new MarkerOptions().draggable(false).position(gamer).title("ВЫ НАХОДИТЕСЬ ЗДЕСЬ").icon(getIconFromDrawables(getDrawable(R.drawable.bus))));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(gamer));
-        for (OrderData order : RelativeOrder) {
+
+        createGamerMarker();
+
+        for (OrderData order : dao.selectOrder()) {
             String[] o = order.coordinates.split(",");
+            coords = new ArrayList<>();
+            BitmapDescriptor iconShop = getIconFromDrawables(getDrawable(Integer.parseInt(order.icon)));
             List<Float> or = new ArrayList<Float>();
             or.add(Float.parseFloat(o[0]));
             or.add(Float.parseFloat(o[1]));
             coords.add(or);
-            if (Float.parseFloat(String.valueOf(gameData.gamerCoord.get(0))) != or.get(0)) mMap.addMarker(new MarkerOptions().position(new LatLng(or.get(0), or.get(1))).title(order.name).icon(iconShop));
+            if (Float.parseFloat(String.valueOf(gameData.gamerCoord.get(0))) != or.get(0))
+                mMap.addMarker(new MarkerOptions().position(new LatLng(or.get(0), or.get(1))).title(order.name).icon(iconShop).zIndex(order.id));
         }
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(13f));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(gamer));
-        uiSettings = mMap.getUiSettings();
-        uiSettings.setZoomControlsEnabled(false);
-        uiSettings.setMapToolbarEnabled(false);
-        uiSettings.setCompassEnabled(false);
+        settingsMap();
 
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) marker -> {
             if (!gamer.equals(marker.getPosition())) {
@@ -104,13 +105,33 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
                 currentCoord.add(marker.getPosition().latitude);
                 currentCoord.add(marker.getPosition().longitude);
                 Location.distanceBetween(gamer.latitude, gamer.longitude,
-                                marker.getPosition().latitude, marker.getPosition().longitude, results);
-                time = (int) (results[0] / ( 60 * (4 / 3.6) *(2-gameData.k)) * (gameData.exp/5) );
-                if (time < 60) marker.setTitle(time + " сек.");
-                else marker.setTitle(time / 60 + " мин.");
+                        marker.getPosition().latitude, marker.getPosition().longitude, results);
+                time = (int) (results[0] / ( 60 * (4 / 3.6) ) * ( (gameData.exp+5)/5) );
+                System.out.println(time);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame, new DeliveryFragment(marker.getZIndex(),time)).commit();
+                selectOrderData.addExp = dao.getById((int) marker.getZIndex()).get(0).exp;
+                selectOrderData.earnFomOrder = dao.getById((int) marker.getZIndex()).get(0).cost;
+                selectOrderData.currentTime = time;
             }
             return false;
         });
+    }
+
+    private void settingsMap() {
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(13f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(gamer));
+        uiSettings = mMap.getUiSettings();
+        uiSettings.setZoomControlsEnabled(false);
+        uiSettings.setMapToolbarEnabled(false);
+        uiSettings.setCompassEnabled(false);
+    }
+
+    private void createGamerMarker() {
+        gamer = new LatLng(gameData.gamerCoord.get(0), gameData.gamerCoord.get(1));
+        mMap.addMarker(new MarkerOptions().draggable(false).position(gamer).title("ВЫ НАХОДИТЕСЬ ЗДЕСЬ").icon(getIconFromDrawables(getDrawable(R.drawable.walking))));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(gamer));
+
     }
 
     private void makeToastSize(String t) {

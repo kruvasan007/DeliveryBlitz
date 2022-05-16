@@ -23,6 +23,9 @@ public interface OrderDao {
     @Query("SELECT * FROM OrderData WHERE name = :selectName")
     List<OrderData> getByName(String selectName);
 
+    @Query("SELECT * FROM OrderData WHERE id = :selectId")
+    List<OrderData> getById(int selectId);
+
     @Insert
     long insertOrder(OrderData orderData);
 

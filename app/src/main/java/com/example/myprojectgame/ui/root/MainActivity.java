@@ -13,9 +13,10 @@ import com.example.myprojectgame.db.FoodData;
 import com.example.myprojectgame.db.GameData;
 import com.example.myprojectgame.db.OrderDao;
 import com.example.myprojectgame.db.OrderData;
+import com.example.myprojectgame.db.SelectOrderData;
 import com.example.myprojectgame.db.TransportData;
 import com.example.myprojectgame.ui.App;
-import com.example.myprojectgame.ui.select.ChooseOrderActivity;
+import com.example.myprojectgame.ui.Delivery.DeliveryActivity;
 import com.example.myprojectgame.ui.shop.ShopActivity;
 
 import java.util.ArrayList;
@@ -26,9 +27,8 @@ public class MainActivity extends BaseActivity {
 
     private static TextView textMoney, textHealth, textEx;
     public static GameData gameData;
+    public static SelectOrderData selectOrderData;
     private SharedPreferences sh;
-    private List<Double> coord;
-    private int money, health, exp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,30 +61,34 @@ public class MainActivity extends BaseActivity {
         int money = sh.getInt("money", 100);
         int health = sh.getInt("health", 100);
         int exp = sh.getInt("exp", 0);
-        int progress = sh.getInt("progress", 0);
-        long time = sh.getLong("time", 1000);
-        int state = sh.getInt("state", 0);
         String[] cordS = sh.getString("coord", "54.991225577868676 82.8972068018308").split(" ");
         System.out.println(cordS[0]);
         List<Double> coord = new ArrayList<Double>();
         coord.add(Double.parseDouble(cordS[0]));
         coord.add(Double.parseDouble(cordS[1]));
-        gameData = new GameData(money, health, exp, coord, progress, time,state);
+        gameData = new GameData(money, health, exp, coord);
     }
 
     private void getIntentionLastActivity() {
+        int progress = sh.getInt("currentProgress", 0);
+        long time = sh.getLong("currentTime", 0);
+        int exp = sh.getInt("currentExp", 0);
+        int cost = sh.getInt("currentCost", 0);
+        int earn = sh.getInt("currentEarn", 0);
+
+        selectOrderData = new SelectOrderData(progress,time,exp,earn,cost);
         Class<?> activityClass;
         try {
             activityClass = Class.forName(sh.getString("lastActivity", "" + MainActivity.class));
         } catch (ClassNotFoundException e) {
             activityClass = MainActivity.class;
         }
-        if (gameData.state == 1) startActivity(new Intent(this, activityClass));
+        if (selectOrderData.currentTime != 0) startActivity(new Intent(this, activityClass));
     }
 
     private void startButton() {
         if (gameData.health > 10){
-            Intent intent = new Intent(MainActivity.this, ChooseOrderActivity.class);
+            Intent intent = new Intent(MainActivity.this, DeliveryActivity.class);
             startActivity(intent);
             finish();
         }

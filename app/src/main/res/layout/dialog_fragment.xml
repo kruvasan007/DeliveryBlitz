@@ -6,6 +6,14 @@
     android:orientation="vertical"
     android:layout_margin="16dp">
 
+    <Button
+        android:id="@+id/close_button"
+        android:layout_margin="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x"
+        android:backgroundTint="@color/red_white"
+        android:shadowColor="@color/red_white"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
