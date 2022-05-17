@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -88,7 +89,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
             card.setClipToOutline(true);
             health.setText(item.health+" hp");
             cost.setText(item.cost+" руб.");
-            Drawable myDrawable = card.getContext().getDrawable(Integer.parseInt(item.icon));
+            Drawable myDrawable = AppCompatResources.getDrawable(card.getContext(),item.icon);
             icon.setImageDrawable(myDrawable);
         }
     }

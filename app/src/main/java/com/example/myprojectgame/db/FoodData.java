@@ -9,11 +9,11 @@ public class FoodData {
     public long id;
 
     public String name;
-    public String icon;
+    public int icon;
     public int cost;
     public int health;
 
-    public FoodData(String name, String icon, int cost, int health) {
+    public FoodData(String name, int icon, int cost, int health) {
         this.name = name;
         this.icon = icon;
         this.cost = cost;

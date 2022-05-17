@@ -18,7 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.example.myprojectgame.R;
-import com.example.myprojectgame.db.SelectOrderData;
+import com.example.myprojectgame.data.SelectOrderData;
 import com.example.myprojectgame.ui.root.BaseActivity;
 import com.example.myprojectgame.ui.root.MainActivity;
 
@@ -45,21 +45,24 @@ public class ClickerActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clicker);
-        setStart();
-        onStartTimer();
-        prograssBar = (ProgressBar) findViewById(R.id.progressBar);
-        prograssBar.setMax((int) selectOrderData.currentTime-2);
+
+        selectOrderData.state = 1;
+
+        prograssBar = findViewById(R.id.progressBar);
         descr = findViewById(R.id.descr);
         timer = findViewById(R.id.timer);
-        personImage = (ImageView) findViewById(R.id.image_view);
+        personImage = findViewById(R.id.image_view);
         personAnimation = (AnimationDrawable) personImage.getBackground();
-        if (damage == 3 && gameData.exp > 50) createDialogAccident();
-        clickCounter = 0;
+
         personAnimation.start();
         fastpersonAnimation = new AnimationDrawable();
         for (int i = 0; i < personAnimation.getNumberOfFrames(); i++)
             fastpersonAnimation.addFrame(personAnimation.getFrame(i), 50);
         fastpersonAnimation.setOneShot(true);
+
+        setDamage();
+        onStartTimer();
+        if (damage == 3 && gameData.exp > 50 && gameData.health > 30) createDialogAccident();
 
         fastAnimation = new CustomAnimationDrawable(fastpersonAnimation) {
             @Override
@@ -82,11 +85,10 @@ public class ClickerActivity extends BaseActivity {
         personImage.setOnClickListener(v -> clickAnimation());
     }
 
-    public void setStart() {
+    private void setDamage(){
         Random random = new Random();
         damage = random.nextInt(10);
     }
-
     private void startAnim() {
         if (clickCounter == 1) {
             descr.setVisibility(View.INVISIBLE);
@@ -115,6 +117,10 @@ public class ClickerActivity extends BaseActivity {
     }
 
     private void onStartTimer() {
+
+        clickCounter = 0;
+        prograssBar.setMax((int) selectOrderData.currentTime-2);
+        prograssBar.setProgress(0);
         firstTime = System.currentTimeMillis() + selectOrderData.currentTime * 1000;
         mTimer = new Timer();
         myTimerTask = new MyTimer();
@@ -137,21 +143,37 @@ public class ClickerActivity extends BaseActivity {
                     prograssBar.setProgress(prograssBar.getProgress() + 1);
                     selectOrderData.currentProgress = prograssBar.getProgress();
                     if (selectOrderData.currentTime <= 0) {
-                        mTimer.cancel();
-                        myTimerTask.cancel();
                         makeToastSize("Доставка выполнена успешно");
-                        gameData.money += selectOrderData.earnFomOrder;
-                        gameData.exp += selectOrderData.addExp;
-                        selectOrderData = new SelectOrderData(0,0,0,0,0);
-                        Intent intent = new Intent(ClickerActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        endTime();
                     }
                     else timer.setText(strDate);
 
                 }
             });
         }
+    }
+
+    private void endTime() {
+        gameData.money += selectOrderData.earnFomOrder;
+        gameData.exp += selectOrderData.addExp;
+        selectOrderData = new SelectOrderData(null,null,null,null,null,null);
+        Intent intent = new Intent(ClickerActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    protected void onPause() {
+        myTimerTask.cancel();
+        mTimer.cancel();
+        mTimer.purge();
+        super.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        onStartTimer();
     }
 }
 

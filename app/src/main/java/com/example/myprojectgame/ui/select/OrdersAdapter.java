@@ -87,7 +87,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                             TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(orderTime))
             );
             time.setText(stringTime + " мин.");
-            Drawable myDrawable = card.getContext().getDrawable(Integer.parseInt(item.icon));
+            Drawable myDrawable = card.getContext().getDrawable(item.icon);
             icon.setImageDrawable(myDrawable);
             card.setBackground(card.getContext().getDrawable(R.drawable.constraint_style));
         }

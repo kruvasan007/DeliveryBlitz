@@ -12,8 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="x"
-        android:backgroundTint="@color/red_white"
-        android:shadowColor="@color/red_white"/>
+        android:background="#000f" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

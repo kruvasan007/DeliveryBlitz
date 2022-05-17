@@ -10,10 +10,10 @@ public class TransportData {
 
     public String name;
     public int costs;
-    public String icon;
+    public int icon;
     public Double k;
 
-    public TransportData(String name, int costs, String icon, Double k) {
+    public TransportData(String name, int costs, int icon, Double k) {
         this.name = name;
         this.icon = icon;
         this.costs = costs;

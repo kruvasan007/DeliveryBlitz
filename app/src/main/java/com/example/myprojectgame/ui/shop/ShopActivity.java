@@ -47,4 +47,5 @@ public class ShopActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
+
 }

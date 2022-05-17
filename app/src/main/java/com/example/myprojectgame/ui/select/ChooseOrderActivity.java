@@ -44,6 +44,7 @@ public class ChooseOrderActivity extends BaseActivity {
                 if (selectOrderData.k != 0) {
                     if ( gameData.money - selectOrderData.costDelivery >= 0){
                         gameData.health -= 10;
+                        gameData.gamerCoord = DeliveryActivity.currentCoord;
                         selectOrderData.currentTime = (long) (selectOrderData.currentTime/(2-selectOrderData.k));
                         nextActivity();
                     }

@@ -4,11 +4,12 @@ import static com.example.myprojectgame.ui.root.MainActivity.gameData;
 import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.myprojectgame.domain.PreferencesManager;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -21,23 +22,15 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
-        SharedPreferences.Editor myEdit = sharedPreferences.edit();
-        myEdit.putInt("money", gameData.money);
-        myEdit.putInt("health", gameData.health);
-        myEdit.putInt("exp", gameData.exp);
-        myEdit.putInt("currentExp", selectOrderData.addExp);
-        myEdit.putLong("currentTime",selectOrderData.currentTime);
-        myEdit.putInt("currentProgress",selectOrderData.currentProgress);
-        myEdit.putInt("currentCost",selectOrderData.costDelivery);
-        myEdit.putInt("currentEarn",selectOrderData.earnFomOrder);
-        myEdit.putString("coord",gameData.gamerCoord.get(0).toString()+" "+gameData.gamerCoord.get(1).toString());
-        myEdit.putString("lastActivity", getClass().getName());
-        myEdit.apply();
+        PreferencesManager pm = new PreferencesManager(this);
+        pm.setSelectOrderData(selectOrderData);
+        pm.setGameData(gameData);
+        pm.close();
     }
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
         finish();

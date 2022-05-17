@@ -11,7 +11,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.myprojectgame.R;
@@ -41,7 +41,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     private ArrayList<List<Float>> coords;
     private OrderDao dao;
     private int time;
-    private List<Double> currentCoord;
+    public static List<Double> currentCoord;
     private LatLng gamer;
 
     @Override
@@ -49,10 +49,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery);
 
-        Button nextButton = findViewById(R.id.next_step_button);
-        nextButton.setOnClickListener(v -> nextActivity());
-
-        Button backButton = findViewById(R.id.back_button);
+        ImageButton backButton = findViewById(R.id.linear_layout).findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> backActivity());
 
         dao = App.getAppDatabaseInstance().orderDao();
@@ -68,14 +65,17 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         finish();
     }
 
-    private void nextActivity() {
-        if (selectOrderData.earnFomOrder == 0) makeToastSize("Выберите ресторан");
+    protected void nextActivity() {
+        if (selectOrderData.currentTime <= 0) makeToastSize("Выберите ресторан");
         else {
-            gameData.gamerCoord = currentCoord;
-            selectOrderData.currentTime = time;
-            Intent intent = new Intent(DeliveryActivity.this, ChooseOrderActivity.class);
-            startActivity(intent);
-            finish();
+            try {
+                selectOrderData.currentTime = time;
+                Intent intent = new Intent(DeliveryActivity.this, ChooseOrderActivity.class);
+                startActivity(intent);
+                finish();
+            } catch (Exception e) {
+                makeToastSize("Выберите ресторан");
+            }
         }
     }
 
@@ -88,7 +88,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         for (OrderData order : dao.selectOrder()) {
             String[] o = order.coordinates.split(",");
             coords = new ArrayList<>();
-            BitmapDescriptor iconShop = getIconFromDrawables(getDrawable(Integer.parseInt(order.icon)));
+            BitmapDescriptor iconShop = getIconFromDrawables(getDrawable(order.icon));
             List<Float> or = new ArrayList<Float>();
             or.add(Float.parseFloat(o[0]));
             or.add(Float.parseFloat(o[1]));
@@ -106,10 +106,9 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
                 currentCoord.add(marker.getPosition().longitude);
                 Location.distanceBetween(gamer.latitude, gamer.longitude,
                         marker.getPosition().latitude, marker.getPosition().longitude, results);
-                time = (int) (results[0] / ( 60 * (4 / 3.6) ) * ( (gameData.exp+5)/5) );
-                System.out.println(time);
+                time = (int) (results[0] / (65 * (4 / 3.6)) + ((1+ gameData.exp) / 10));
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame, new DeliveryFragment(marker.getZIndex(),time)).commit();
+                        .replace(R.id.frame, new DeliveryFragment(marker.getZIndex(), time)).commit();
                 selectOrderData.addExp = dao.getById((int) marker.getZIndex()).get(0).exp;
                 selectOrderData.earnFomOrder = dao.getById((int) marker.getZIndex()).get(0).cost;
                 selectOrderData.currentTime = time;

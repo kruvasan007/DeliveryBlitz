@@ -10,11 +10,11 @@ public class OrderData {
 
     public String name;
     public String coordinates;
-    public String icon;
+    public int icon;
     public int cost;
     public int exp;
 
-    public OrderData(String name, String coordinates, String icon, int cost, int exp) {
+    public OrderData(String name, String coordinates, int icon, int cost, int exp) {
         this.name = name;
         this.icon = icon;
         this.coordinates = coordinates;
