@@ -14,10 +14,10 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojectgame.R;
-import com.example.myprojectgame.db.Order;
 import com.example.myprojectgame.db.OrderDao;
+import com.example.myprojectgame.db.TransportData;
 import com.example.myprojectgame.ui.App;
-import com.example.myprojectgame.ui.Delivery.DeliveryActivity;
+import com.example.myprojectgame.ui.delivery.DeliveryActivity;
 import com.example.myprojectgame.ui.click.ClickerActivity;
 import com.example.myprojectgame.ui.root.BaseActivity;
 
@@ -44,7 +44,7 @@ public class ChooseOrderActivity extends BaseActivity {
                 if (selectOrderData.k != 0) {
                     if ( gameData.money - selectOrderData.costDelivery >= 0){
                         gameData.health -= 10;
-                        gameData.gamerCoord = DeliveryActivity.currentCoord;
+                        gameData.gamerCoord = selectOrderData.selectCurrentCoord;
                         selectOrderData.currentTime = (long) (selectOrderData.currentTime/(2-selectOrderData.k));
                         nextActivity();
                     }
@@ -54,7 +54,7 @@ public class ChooseOrderActivity extends BaseActivity {
 
         buttonClose.setOnClickListener(v -> closeButton());
     }
-    public static void OrderTransport(Order data) {
+    public static void OrderTransport(TransportData data) {
         selectOrderData.costDelivery = data.costs;
         selectOrderData.k = data.k;
     }

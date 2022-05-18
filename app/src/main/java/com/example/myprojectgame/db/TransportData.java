@@ -19,9 +19,4 @@ public class TransportData {
         this.costs = costs;
         this.k = k;
     }
-
-    public Order fromTransportToOrder(){
-        return new Order(name,"none",icon, costs,0,k);
-    }
-
 }

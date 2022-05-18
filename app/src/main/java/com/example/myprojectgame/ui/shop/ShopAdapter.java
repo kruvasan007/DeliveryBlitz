@@ -28,6 +28,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
 
     public ShopAdapter(List<FoodData> data) {
         cards.clear();
+        lastFood = null;
         this.data = data;
     }
 
@@ -51,11 +52,10 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
 
     public static void buyItem() {
         if (lastFood != null) {
-            TextView health = lastFood.findViewById(R.id.health);
-            TextView cost = lastFood.findViewById(R.id.cost);
-            if (gameData.money - Integer.parseInt(((String) cost.getText()).split(" ")[0]) >= 0) {
-                gameData.health += Integer.parseInt(((String) health.getText()).split(" ")[0]);
-                gameData.money -= Integer.parseInt(((String) cost.getText()).split(" ")[0]);
+            FoodData dataf = data.get(cards.indexOf(lastFood));
+            if (gameData.money - dataf.cost >= 0) {
+                gameData.health += dataf.health;
+                gameData.money -= dataf.cost;
                 lastFood.setBackground(lastFood.getContext().getDrawable(R.drawable.food_style));
                 lastFood = null;
             }
@@ -87,8 +87,8 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
             name.setText(item.name);
             cards.add(card);
             card.setClipToOutline(true);
-            health.setText(item.health+" hp");
-            cost.setText(item.cost+" руб.");
+            health.setText("+"+item.health+" hp");
+            cost.setText("-" +item.cost+" руб.");
             Drawable myDrawable = AppCompatResources.getDrawable(card.getContext(),item.icon);
             icon.setImageDrawable(myDrawable);
         }

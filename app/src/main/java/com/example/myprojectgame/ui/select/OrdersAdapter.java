@@ -15,7 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojectgame.R;
-import com.example.myprojectgame.db.Order;
+import com.example.myprojectgame.db.TransportData;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
-    public static List<Order> data;
+    public static List<TransportData> data;
     protected static ConstraintLayout lastBut;
     protected static LinkedList<ConstraintLayout> cards = new LinkedList<>();
     public static List<Integer> color = new ArrayList<Integer>();
 
 
-    public OrdersAdapter(List<Order> data) {
+    public OrdersAdapter(List<TransportData> data) {
         cards.clear();
         this.data = data;
     }
@@ -71,7 +71,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             });
         }
 
-        public void bind(Order item) {
+        public void bind(TransportData item) {
             TextView name = card.findViewById(R.id.name);
             TextView earn = card.findViewById(R.id.earn);
             TextView time = card.findViewById(R.id.time);

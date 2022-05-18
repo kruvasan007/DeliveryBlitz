@@ -67,6 +67,7 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
     <FrameLayout
         android:id="@+id/ItemContainer"
         android:layout_width="match_parent"
@@ -85,15 +86,16 @@
         android:layout_marginBottom="4dp"
         android:backgroundTint="@color/yellow_while"
         android:fontFamily="@font/press_start_2p"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:paddingRight="32dp"
         android:paddingLeft="32dp"
+        android:paddingTop="16dp"
+        android:paddingRight="32dp"
+        android:paddingBottom="16dp"
         android:text="Купить"
         android:textColor="@color/red_white"
         app:layout_constraintBottom_toTopOf="@+id/back_button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
     <Button
         android:id="@+id/back_button"
         android:layout_width="wrap_content"

@@ -1,4 +1,4 @@
-package com.example.myprojectgame.ui.Delivery;
+package com.example.myprojectgame.ui.delivery;
 
 import static com.example.myprojectgame.ui.root.MainActivity.gameData;
 import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
@@ -43,6 +43,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     private int time;
     public static List<Double> currentCoord;
     private LatLng gamer;
+    private int earn, exp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +85,6 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         createGamerMarker();
-
         for (OrderData order : dao.selectOrder()) {
             String[] o = order.coordinates.split(",");
             coords = new ArrayList<>();
@@ -106,15 +106,34 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
                 currentCoord.add(marker.getPosition().longitude);
                 Location.distanceBetween(gamer.latitude, gamer.longitude,
                         marker.getPosition().latitude, marker.getPosition().longitude, results);
-                time = (int) (results[0] / (65 * (4 / 3.6)) + ((1+ gameData.exp) / 10));
+
+                time = calculateTime(results[0]);
+                earn = calculateEarn(results[0]);
+                exp = calculateExp(results[0]);
+
+
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame, new DeliveryFragment(marker.getZIndex(), time)).commit();
-                selectOrderData.addExp = dao.getById((int) marker.getZIndex()).get(0).exp;
-                selectOrderData.earnFomOrder = dao.getById((int) marker.getZIndex()).get(0).cost;
+                        .replace(R.id.frame, new DeliveryFragment()).commit();
+
+                selectOrderData.addExp = exp;
+                selectOrderData.selectCurrentCoord = currentCoord;
+                selectOrderData.earnFomOrder = earn;
                 selectOrderData.currentTime = time;
+                selectOrderData.name = marker.getTitle();
             }
             return false;
         });
+    }
+
+    private int calculateExp(float number) {
+        return (int) (5 * (Math.ceil(Math.abs((number / ((4 * 500 / 3.6) + (1 + gameData.exp) / 10) / 5)))));
+    }
+    private int calculateEarn(float number) {
+        return (int) ( number / ((4 / 3.6) * 300) + ((1 + gameData.exp) / 5));
+    }
+
+    private int calculateTime(float number) {
+        return (int)  ( number / (65 * (4 / 3.6)) + ((1 + gameData.exp) / 10));
     }
 
     private void settingsMap() {

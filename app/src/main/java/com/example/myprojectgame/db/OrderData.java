@@ -11,19 +11,12 @@ public class OrderData {
     public String name;
     public String coordinates;
     public int icon;
-    public int cost;
-    public int exp;
 
-    public OrderData(String name, String coordinates, int icon, int cost, int exp) {
+    public OrderData(String name, String coordinates, int icon) {
         this.name = name;
         this.icon = icon;
         this.coordinates = coordinates;
-        this.cost = cost;
-        this.exp = exp;
     }
 
-    public Order fromOrderstoOrder(){
-        return new Order(name,coordinates,icon,cost,exp);
-    }
     public String getCoordinates() { return this.coordinates;}
 }

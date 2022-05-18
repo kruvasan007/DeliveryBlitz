@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.data.GameData;
+import com.example.myprojectgame.data.IconId;
 import com.example.myprojectgame.data.SelectOrderData;
 import com.example.myprojectgame.db.FoodData;
 import com.example.myprojectgame.db.OrderDao;
@@ -18,7 +19,7 @@ import com.example.myprojectgame.db.OrderData;
 import com.example.myprojectgame.db.TransportData;
 import com.example.myprojectgame.domain.PreferencesManager;
 import com.example.myprojectgame.ui.App;
-import com.example.myprojectgame.ui.Delivery.DeliveryActivity;
+import com.example.myprojectgame.ui.delivery.DeliveryActivity;
 import com.example.myprojectgame.ui.click.ClickerActivity;
 import com.example.myprojectgame.ui.shop.ShopActivity;
 
@@ -38,6 +39,7 @@ public class MainActivity extends BaseActivity {
         createGameData();
         createSelectOrderData();
         getIntentionLastActivity();
+        pm.close();
 
         setContentView(R.layout.activity_main);
 
@@ -73,10 +75,11 @@ public class MainActivity extends BaseActivity {
     private void healthAnimation() {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.animation);
         animation.reset();
-        textHealth.setText(""+gameData.health);
+        textHealth.setText("" + gameData.health);
         textHealth.clearAnimation();
         textHealth.startAnimation(animation);
     }
+
     private void getIntentionLastActivity() {
         if (selectOrderData.state == 1) {
             startActivity(new Intent(this, ClickerActivity.class));
@@ -94,18 +97,25 @@ public class MainActivity extends BaseActivity {
 
     private void firstRunDataBase() {
         dao = App.getAppDatabaseInstance().orderDao();
-        dao.insertOrder(new OrderData("МАК ДАК", "55.02926001110971, 82.93647034818923", R.drawable.mcdonalds, 25, 10));
-        dao.insertOrder(new OrderData("МАК ДАК", "55.03963005768076, 82.96122777648965", R.drawable.mcdonalds, 10, 5));
-        dao.insertOrder(new OrderData("МАК ДАК", "55.04477301431026, 82.92285248440155", R.drawable.mcdonalds, 40, 30));
-        dao.insertOrder(new OrderData("МАК ДАК", "55.0106521380292, 82.93736307619466", R.drawable.mcdonalds, 99, 110));
-        dao.insertOrder(new OrderData("KФC", "54.989384589520384, 82.9079604150277", R.drawable.kfc, 50, 45));
-        dao.insertOrder(new OrderData("KФC", "54.985050928898104, 82.89371252068324", R.drawable.kfc, 36, 30));
-        dao.insertOrder(new OrderData("KФC", "55.04162177716465, 82.91282626462706", R.drawable.kfc, 40, 5));
-        dao.insertFood(new FoodData("КОФЕ", R.drawable.koffe, 10, 5));
-        dao.insertFood(new FoodData("БАТОНЧИК", R.drawable.stick, 30, 15));
-        dao.insertTransport(new TransportData("АВТОБУС", 50, R.drawable.bus, 0.7d));
-        dao.insertTransport(new TransportData("ПЕШКОМ", 0, R.drawable.walking, 1.0d));
-        dao.insertTransport(new TransportData("МЕТРО", 100, R.drawable.train, 0.4d));
+        dao.insertOrder(new OrderData("МАК ДАК", "55.03963005768076, 82.96122777648965", IconId.MCDONALDS.getIcon()));
+        dao.insertOrder(new OrderData("МАК ДАК", "55.0106521380292, 82.93736307619466", IconId.MCDONALDS.getIcon()));
+        dao.insertOrder(new OrderData("МАК ДАК", "55.04477301431026, 82.92285248440155", IconId.MCDONALDS.getIcon()));
+        dao.insertOrder(new OrderData("МАК ДАК", "54.96414597832322, 82.93641956376621", IconId.MCDONALDS.getIcon()));
+        dao.insertOrder(new OrderData("МАК ДАК", "55.04429278979794, 82.95093933736995", IconId.MCDONALDS.getIcon()));
+
+        dao.insertOrder(new OrderData("KФC", "54.989384589520384, 82.9079604150277", IconId.KFC.getIcon()));
+        dao.insertOrder(new OrderData("KФC", "54.985050928898104, 82.89371252068324", IconId.KFC.getIcon()));
+        dao.insertOrder(new OrderData("KФC", "55.04162177716465, 82.91282626462706", IconId.KFC.getIcon()));
+
+        dao.insertOrder(new OrderData("ТОМЯМ БАР", "55.0298768288667, 82.93723510525126", IconId.TOMYAM.getIcon()));
+        dao.insertOrder(new OrderData("ТОМЯМ БАР", "55.05111537242559, 82.93920641008613", IconId.TOMYAM.getIcon()));
+        dao.insertOrder(new OrderData("ТОМЯМ БАР", "54.991995862500346, 82.85863831589572", IconId.TOMYAM.getIcon()));
+
+        dao.insertFood(new FoodData("КОФЕ", IconId.KOFFEE.getIcon(), 10, 5));
+        dao.insertFood(new FoodData("БАТОНЧИК", IconId.STICK.getIcon(), 30, 15));
+        dao.insertTransport(new TransportData("АВТОБУС", 50, IconId.BUS.getIcon(), 0.7d));
+        dao.insertTransport(new TransportData("ПЕШКОМ", 0, IconId.WALK.getIcon(), 1.0d));
+        dao.insertTransport(new TransportData("МЕТРО", 100, IconId.METRO.getIcon(), 0.4d));
         pm.setFirstRun();
     }
 

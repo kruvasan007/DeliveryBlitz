@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojectgame.R;
-import com.example.myprojectgame.db.Order;
 import com.example.myprojectgame.db.OrderDao;
 import com.example.myprojectgame.db.TransportData;
 import com.example.myprojectgame.ui.App;
@@ -22,7 +21,7 @@ import java.util.List;
 public class OrderFragment extends Fragment {
     private OrderDao dao;
     private OrdersAdapter adapter;
-    private List<Order> data;
+    private List<TransportData> data;
 
     @Nullable
     @Override
@@ -42,6 +41,6 @@ public class OrderFragment extends Fragment {
 
     private void getTransportData() {
         dao = App.getAppDatabaseInstance().orderDao();
-        for (TransportData order: dao.selectTransport()) data.add(order.fromTransportToOrder());
+        data = dao.selectTransport();
     }
 }

@@ -1,4 +1,6 @@
-package com.example.myprojectgame.ui.Delivery;
+package com.example.myprojectgame.ui.delivery;
+
+import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -18,7 +20,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.db.OrderDao;
-import com.example.myprojectgame.db.OrderData;
 import com.example.myprojectgame.ui.App;
 import com.example.myprojectgame.ui.select.ChooseOrderActivity;
 
@@ -26,13 +27,8 @@ import java.util.concurrent.TimeUnit;
 
 public class DeliveryFragment extends Fragment {
     private OrderDao dao;
-    private OrderData data;
-    private int orderTime;
 
-    public DeliveryFragment(float zIndex,int t) {
-        dao = App.getAppDatabaseInstance().orderDao();
-        this.orderTime = t;
-        this.data = dao.getById((int)zIndex).get(0);
+    public DeliveryFragment() {
     }
 
     public void nextActivity() {
@@ -43,6 +39,7 @@ public class DeliveryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.card_order, container, false);
+        dao = App.getAppDatabaseInstance().orderDao();
         TextView earn = view.findViewById(R.id.earn);
         TextView exp = view.findViewById(R.id.exp);
         TextView name = view.findViewById(R.id.name);
@@ -53,15 +50,15 @@ public class DeliveryFragment extends Fragment {
 
         ImageView icon = view.findViewById(R.id.icon);
         @SuppressLint("DefaultLocale") String stringTime = String.format("%02d:%02d",
-                TimeUnit.SECONDS.toMinutes(orderTime),
-                TimeUnit.SECONDS.toSeconds(orderTime) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(orderTime))
+                TimeUnit.SECONDS.toMinutes(selectOrderData.currentTime),
+                TimeUnit.SECONDS.toSeconds(selectOrderData.currentTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(selectOrderData.currentTime))
         );
         time.setText(stringTime+" мин.");
-        name.setText(data.name);
-        exp.setText(data.exp+" xp");
-        earn.setText(data.cost+" руб.");
-        Drawable myDrawable = AppCompatResources.getDrawable(view.getContext(),data.icon);
+        name.setText(selectOrderData.name);
+        exp.setText(selectOrderData.addExp+" xp");
+        earn.setText(selectOrderData.earnFomOrder+" руб.");
+        Drawable myDrawable = AppCompatResources.getDrawable(view.getContext(),dao.getByName(selectOrderData.name).get(0).icon);
         icon.setImageDrawable(myDrawable);
         return view;
     }
