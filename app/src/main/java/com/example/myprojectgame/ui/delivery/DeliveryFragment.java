@@ -21,7 +21,7 @@ import androidx.fragment.app.Fragment;
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.db.OrderDao;
 import com.example.myprojectgame.ui.App;
-import com.example.myprojectgame.ui.select.ChooseOrderActivity;
+import com.example.myprojectgame.ui.choose.ChooseTransportActivity;
 
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +32,7 @@ public class DeliveryFragment extends Fragment {
     }
 
     public void nextActivity() {
-        startActivity(new Intent(requireActivity(), ChooseOrderActivity.class));
+        startActivity(new Intent(requireActivity(), ChooseTransportActivity.class));
     }
 
     @Nullable

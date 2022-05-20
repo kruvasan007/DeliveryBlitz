@@ -20,7 +20,7 @@ import com.example.myprojectgame.db.OrderData;
 import com.example.myprojectgame.ui.App;
 import com.example.myprojectgame.ui.root.BaseActivity;
 import com.example.myprojectgame.ui.root.MainActivity;
-import com.example.myprojectgame.ui.select.ChooseOrderActivity;
+import com.example.myprojectgame.ui.choose.ChooseTransportActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -71,7 +71,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         else {
             try {
                 selectOrderData.currentTime = time;
-                Intent intent = new Intent(DeliveryActivity.this, ChooseOrderActivity.class);
+                Intent intent = new Intent(DeliveryActivity.this, ChooseTransportActivity.class);
                 startActivity(intent);
                 finish();
             } catch (Exception e) {

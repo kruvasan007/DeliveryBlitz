@@ -2,10 +2,12 @@ package com.example.myprojectgame.ui.root;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,30 +21,33 @@ import com.example.myprojectgame.db.OrderData;
 import com.example.myprojectgame.db.TransportData;
 import com.example.myprojectgame.domain.PreferencesManager;
 import com.example.myprojectgame.ui.App;
-import com.example.myprojectgame.ui.delivery.DeliveryActivity;
 import com.example.myprojectgame.ui.click.ClickerActivity;
+import com.example.myprojectgame.ui.delivery.DeliveryActivity;
 import com.example.myprojectgame.ui.shop.ShopActivity;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends BaseActivity {
     private OrderDao dao;
 
-    private TextView textMoney, textHealth, textEx;
     public static GameData gameData;
+    private ProgressBar healthBar;
+    private long regenerateTime;
     private PreferencesManager pm;
     public static SelectOrderData selectOrderData;
+
+
+    private TextView textMoney, textHealth, textEx;
+    private Timer mTimer;
+    private MyHealthTimer myHealthTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        pm = new PreferencesManager(this);
-        createGameData();
-        createSelectOrderData();
-        getIntentionLastActivity();
-        pm.close();
-
         setContentView(R.layout.activity_main);
-
+        healthBar = findViewById(R.id.progressBar);
         Button buttonStart = findViewById(R.id.select_button);
         buttonStart.setOnClickListener(v -> startButton());
 
@@ -52,9 +57,18 @@ public class MainActivity extends BaseActivity {
         textMoney = findViewById(R.id.money);
         textHealth = findViewById(R.id.health);
         textEx = findViewById(R.id.exp);
+
+        //getPreferences
+        pm = new PreferencesManager(this);
+        createGameData();
+        createSelectOrderData();
+        getIntentionLastActivity();
+        pm.close();
+
         textMoney.setText(String.valueOf(gameData.money));
-        textHealth.setText(String.valueOf(gameData.health));
+        textHealth.setText(String.valueOf(gameData.health) + "/100");
         textEx.setText(String.valueOf(gameData.exp));
+
     }
 
     private void shopButton() {
@@ -66,18 +80,39 @@ public class MainActivity extends BaseActivity {
     private void createGameData() {
         if (pm.getFirstRun()) firstRunDataBase();
         gameData = pm.getGameData();
+        if (gameData.health < 100) {
+            healthBar.setVisibility(View.VISIBLE);
+            startHealthRegeneration();
+        }
     }
 
     private void createSelectOrderData() {
         selectOrderData = pm.getSelectableOrderData();
     }
 
-    private void healthAnimation() {
+    private void startDeliveryWithAnimation() {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.animation);
         animation.reset();
-        textHealth.setText("" + gameData.health);
         textHealth.clearAnimation();
         textHealth.startAnimation(animation);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                gameData.health -= 10;
+                textHealth.setText(gameData.health+"/100");
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Intent intent = new Intent(MainActivity.this, DeliveryActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
     }
 
     private void getIntentionLastActivity() {
@@ -89,13 +124,12 @@ public class MainActivity extends BaseActivity {
 
     private void startButton() {
         if (gameData.health > 10) {
-            Intent intent = new Intent(MainActivity.this, DeliveryActivity.class);
-            startActivity(intent);
-            finish();
+            startDeliveryWithAnimation();
         } else Toast.makeText(this, "У вас недостаточно жизней", Toast.LENGTH_SHORT).show();
     }
 
     private void firstRunDataBase() {
+
         dao = App.getAppDatabaseInstance().orderDao();
         dao.insertOrder(new OrderData("МАК ДАК", "55.03963005768076, 82.96122777648965", IconId.MCDONALDS.getIcon()));
         dao.insertOrder(new OrderData("МАК ДАК", "55.0106521380292, 82.93736307619466", IconId.MCDONALDS.getIcon()));
@@ -119,4 +153,37 @@ public class MainActivity extends BaseActivity {
         pm.setFirstRun();
     }
 
+    private void startHealthRegeneration() {
+        regenerateTime = System.currentTimeMillis() + 1000 * 20;
+        healthBar.setProgress(0);
+        healthBar.setMax(1000*20);
+        mTimer = new Timer();
+        myHealthTask = new MyHealthTimer();
+        mTimer.schedule(myHealthTask, 1000, 1000);
+    }
+
+    class MyHealthTimer extends TimerTask {
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    healthBar.setProgress((int) (1000*20 - (regenerateTime - System.currentTimeMillis())));
+                    if (healthBar.getProgress() >= healthBar.getMax()) {
+                        gameData.health += 10;
+                        textHealth.setText(gameData.health+"/100");
+                        myHealthTask.cancel();
+                        mTimer.cancel();
+                        mTimer.purge();
+                        if(gameData.health < 100) {
+                            startHealthRegeneration();
+                        }
+                        else{
+                            healthBar.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                }
+            });
+        }
+    }
 }

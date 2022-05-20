@@ -21,7 +21,7 @@ public class App extends Application {
                     instance.getApplicationContext(),
                     AppDatabase.class,
                     "database.db"
-            ).allowMainThreadQueries().build();
+            ).allowMainThreadQueries().fallbackToDestructiveMigration().build();
         return instance.instanceDatabase;
     }
 }

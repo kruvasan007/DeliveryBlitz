@@ -1,4 +1,4 @@
-package com.example.myprojectgame.ui.select;
+package com.example.myprojectgame.ui.choose;
 
 import static com.example.myprojectgame.ui.root.MainActivity.gameData;
 import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
@@ -21,7 +21,7 @@ import com.example.myprojectgame.ui.delivery.DeliveryActivity;
 import com.example.myprojectgame.ui.click.ClickerActivity;
 import com.example.myprojectgame.ui.root.BaseActivity;
 
-public class ChooseOrderActivity extends BaseActivity {
+public class ChooseTransportActivity extends BaseActivity {
     private static TextView textView;
     private RecyclerView recyclerLayout;
 
@@ -30,11 +30,12 @@ public class ChooseOrderActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order);
+        setContentView(R.layout.activity_transport);
         dao = App.getAppDatabaseInstance().orderDao();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.MainContainer, new OrderFragment()).commit();
+                .replace(R.id.MainContainer, new СhooseTransportFragment()).commit();
+
         recyclerLayout = findViewById(R.id.recycler_layout);
         textView = findViewById(R.id.textView);
         Button buttonClose = findViewById(R.id.back_button);
@@ -43,7 +44,6 @@ public class ChooseOrderActivity extends BaseActivity {
         buttonNext.setOnClickListener(v -> {
                 if (selectOrderData.k != 0) {
                     if ( gameData.money - selectOrderData.costDelivery >= 0){
-                        gameData.health -= 10;
                         gameData.gamerCoord = selectOrderData.selectCurrentCoord;
                         selectOrderData.currentTime = (long) (selectOrderData.currentTime/(2-selectOrderData.k));
                         nextActivity();
@@ -60,13 +60,13 @@ public class ChooseOrderActivity extends BaseActivity {
     }
 
     private void closeButton() {
-        Intent intent = new Intent(ChooseOrderActivity.this, DeliveryActivity.class);
+        Intent intent = new Intent(ChooseTransportActivity.this, DeliveryActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void nextActivity() {
-        Intent intent = new Intent(ChooseOrderActivity.this, ClickerActivity.class);
+        Intent intent = new Intent(ChooseTransportActivity.this, ClickerActivity.class);
         startActivity(intent);
         finish();
     }

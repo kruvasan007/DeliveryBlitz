@@ -21,7 +21,7 @@
         <entry key="..\:/DeliveryBlitz/app/src/main/res/drawable/view_style.xml" value="0.1" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_clicker.xml" value="0.22" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_delivery.xml" value="0.16666666666666666" />
-        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_order.xml" value="0.22" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_shop.xml" value="0.16666666666666666" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/activity_transport.xml" value="0.1" />
@@ -30,6 +30,7 @@
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/dialog_fragment.xml" value="0.16666666666666666" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/fragment_item.xml" value="0.15989583333333332" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/fragment_order.xml" value="0.17552083333333332" />
+        <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/fragment_toolbar.xml" value="0.14791666666666667" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/item_button.xml" value="0.14666666666666667" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/item_food.xml" value="0.25" />
         <entry key="..\:/DeliveryBlitz/app/src/main/res/layout/maps_fragment.xml" value="0.17552083333333332" />

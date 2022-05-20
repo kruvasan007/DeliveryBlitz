@@ -19,12 +19,15 @@ public class PreferencesManager implements Closeable {
     public PreferencesManager(Context context) {
         prefs = context.getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
-    public Boolean getFirstRun(){
-        return prefs.getBoolean("firstrun",true);
+
+    public Boolean getFirstRun() {
+        return prefs.getBoolean("firstrun", true);
     }
-    public void setFirstRun(){
-        prefs.edit().putBoolean("firstrun",false).apply();
+
+    public void setFirstRun() {
+        prefs.edit().putBoolean("firstrun", false).apply();
     }
+
     public GameData getGameData() {
         return new Gson().fromJson(prefs.getString(PREF_GAME_DATA, "{}"), GameData.class);
     }

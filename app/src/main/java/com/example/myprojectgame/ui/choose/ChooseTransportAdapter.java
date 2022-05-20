@@ -1,4 +1,4 @@
-package com.example.myprojectgame.ui.select;
+package com.example.myprojectgame.ui.choose;
 
 import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
 
@@ -22,14 +22,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
+public class ChooseTransportAdapter extends RecyclerView.Adapter<ChooseTransportAdapter.ViewHolder> {
     public static List<TransportData> data;
     protected static ConstraintLayout lastBut;
     protected static LinkedList<ConstraintLayout> cards = new LinkedList<>();
     public static List<Integer> color = new ArrayList<Integer>();
 
 
-    public OrdersAdapter(List<TransportData> data) {
+    public ChooseTransportAdapter(List<TransportData> data) {
         cards.clear();
         this.data = data;
     }
@@ -67,7 +67,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                     lastBut.setBackground(card.getContext().getDrawable(R.drawable.constraint_style));
                 }
                 lastBut = card;
-                ChooseOrderActivity.OrderTransport(data.get(cards.indexOf(card)));
+                ChooseTransportActivity.OrderTransport(data.get(cards.indexOf(card)));
             });
         }
 

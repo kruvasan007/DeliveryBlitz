@@ -117,7 +117,6 @@ public class ClickerActivity extends BaseActivity {
     }
 
     private void onStartTimer() {
-
         clickCounter = 0;
         prograssBar.setMax((int) selectOrderData.currentTime-2);
         prograssBar.setProgress(0);
@@ -156,7 +155,7 @@ public class ClickerActivity extends BaseActivity {
     private void endTime() {
         gameData.money += selectOrderData.earnFomOrder;
         gameData.exp += selectOrderData.addExp;
-        selectOrderData = new SelectOrderData(null,null,null,null,null,null,null,null);
+        selectOrderData = new SelectOrderData(null,null,null,null,null,null,null,null   );
         Intent intent = new Intent(ClickerActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

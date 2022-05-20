@@ -1,4 +1,4 @@
-package com.example.myprojectgame.ui.select;
+package com.example.myprojectgame.ui.choose;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,9 +18,9 @@ import com.example.myprojectgame.ui.App;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderFragment extends Fragment {
+public class СhooseTransportFragment extends Fragment {
     private OrderDao dao;
-    private OrdersAdapter adapter;
+    private ChooseTransportAdapter adapter;
     private List<TransportData> data;
 
     @Nullable
@@ -35,7 +35,7 @@ public class OrderFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_layout);
         data = new ArrayList<>();
         getTransportData();
-        adapter = new OrdersAdapter(data);
+        adapter = new ChooseTransportAdapter(data);
         recyclerView.setAdapter(adapter);
     }
 
