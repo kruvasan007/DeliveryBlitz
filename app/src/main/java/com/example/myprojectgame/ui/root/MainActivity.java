@@ -81,10 +81,7 @@ public class MainActivity extends BaseActivity {
     private void createGameData() {
         if (pm.getFirstRun()) firstRunDataBase();
         gameData = pm.getGameData();
-        if (gameData.health < 100) {
-            healthBar.setVisibility(View.VISIBLE);
-            startHealthRegeneration();
-        }
+        startHealthRegeneration();
     }
 
     private void createSelectOrderData() {
@@ -167,12 +164,31 @@ public class MainActivity extends BaseActivity {
     }
 
     private void startHealthRegeneration() {
-        regenerateTime = System.currentTimeMillis() + 1000 * 20;
-        healthBar.setProgress(0);
-        healthBar.setMax(1000*120);
-        mTimer = new Timer();
-        myHealthTask = new MyHealthTimer();
-        mTimer.schedule(myHealthTask, 1000, 1000);
+        if (gameData.health < 100) {
+            healthBar.setVisibility(View.VISIBLE);
+            regenerateTime = System.currentTimeMillis() + 1000 * 20;
+            healthBar.setProgress(0);
+            healthBar.setMax(1000*120);
+            mTimer = new Timer();
+            myHealthTask = new MyHealthTimer();
+            mTimer.schedule(myHealthTask, 1000, 1000);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (myHealthTask != null) {
+            myHealthTask.cancel();
+            mTimer.cancel();
+            mTimer.purge();
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        startHealthRegeneration();
     }
 
     class MyHealthTimer extends TimerTask {

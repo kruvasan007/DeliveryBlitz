@@ -20,7 +20,7 @@ public class App extends Application {
         instance.instanceDatabase = Room.databaseBuilder(
                     instance.getApplicationContext(),
                     AppDatabase.class,
-                    "database.db"
+                    "mydatabase.db"
             ).allowMainThreadQueries().fallbackToDestructiveMigration().build();
         return instance.instanceDatabase;
     }

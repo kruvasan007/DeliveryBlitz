@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.data.SelectOrderData;
+import com.example.myprojectgame.domain.PreferencesManager;
 import com.example.myprojectgame.ui.root.BaseActivity;
 import com.example.myprojectgame.ui.root.MainActivity;
 
@@ -155,6 +156,7 @@ public class ClickerActivity extends BaseActivity {
     private void endTime() {
         gameData.money += selectOrderData.earnFomOrder;
         gameData.exp += selectOrderData.addExp;
+        gameData.money -= selectOrderData.costDelivery;
         selectOrderData = new SelectOrderData(null,null,null,null,null,null,null,null,null);
         Intent intent = new Intent(ClickerActivity.this, MainActivity.class);
         startActivity(intent);
@@ -167,6 +169,10 @@ public class ClickerActivity extends BaseActivity {
         myTimerTask.cancel();
         mTimer.cancel();
         mTimer.purge();
+        PreferencesManager pm = new PreferencesManager(this);
+        pm.setSelectOrderData(selectOrderData);
+        pm.setGameData(gameData);
+        pm.close();
         super.onPause();
     }
 
