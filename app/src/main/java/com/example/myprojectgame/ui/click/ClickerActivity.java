@@ -178,7 +178,7 @@ public class ClickerActivity extends BaseActivity {
             endTime();
         }
         else{
-            selectOrderData.currentTime = (System.currentTimeMillis() - selectOrderData.lastTime) / 1000;
+            selectOrderData.currentTime -= (System.currentTimeMillis() - selectOrderData.lastTime) / 1000;
             onStartTimer();
         }
     }

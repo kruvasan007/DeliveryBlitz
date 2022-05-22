@@ -121,8 +121,18 @@ public class MainActivity extends BaseActivity {
 
     private void getIntentionLastActivity() {
         if (selectOrderData.state == 1) {
-            startActivity(new Intent(this, ClickerActivity.class));
-            finish();
+            if ( System.currentTimeMillis() - selectOrderData.lastTime >= selectOrderData.currentTime*1000 ){
+                Toast.makeText(this,"Доставка выполнена успешно",Toast
+                .LENGTH_SHORT).show();
+                gameData.money += selectOrderData.earnFomOrder;
+                gameData.exp += selectOrderData.addExp;
+                selectOrderData = new SelectOrderData(null,null,null,null,null,null,null,null,null);
+            }
+            else{
+                selectOrderData.currentTime -= (System.currentTimeMillis() - selectOrderData.lastTime) / 1000;
+                startActivity(new Intent(this, ClickerActivity.class));
+                finish();
+            }
         }
     }
 
