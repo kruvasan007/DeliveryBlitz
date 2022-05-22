@@ -35,6 +35,7 @@ public class MainActivity extends BaseActivity {
     private ProgressBar healthBar;
     private long regenerateTime;
     private PreferencesManager pm;
+    private Button buttonStart;
     public static SelectOrderData selectOrderData;
 
 
@@ -48,7 +49,7 @@ public class MainActivity extends BaseActivity {
 
         setContentView(R.layout.activity_main);
         healthBar = findViewById(R.id.progressBar);
-        Button buttonStart = findViewById(R.id.select_button);
+        buttonStart = findViewById(R.id.select_button);
         buttonStart.setOnClickListener(v -> startButton());
 
         ImageButton buttonShop = findViewById(R.id.shop_button);
@@ -66,7 +67,7 @@ public class MainActivity extends BaseActivity {
         pm.close();
 
         textMoney.setText(String.valueOf(gameData.money));
-        textHealth.setText(String.valueOf(gameData.health) + "/100");
+        textHealth.setText(String.valueOf(gameData.health));
         textEx.setText(String.valueOf(gameData.exp));
 
     }
@@ -95,15 +96,18 @@ public class MainActivity extends BaseActivity {
         animation.reset();
         textHealth.clearAnimation();
         textHealth.startAnimation(animation);
+
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
+                buttonStart.setEnabled(false);
                 gameData.health -= 10;
-                textHealth.setText(gameData.health+"/100");
+                textHealth.setText(String.valueOf(gameData.health));
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                buttonStart.setEnabled(true);
                 Intent intent = new Intent(MainActivity.this, DeliveryActivity.class);
                 startActivity(intent);
                 finish();
@@ -129,7 +133,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void firstRunDataBase() {
-
         dao = App.getAppDatabaseInstance().orderDao();
         dao.insertOrder(new OrderData("МАК ДАК", "55.03963005768076, 82.96122777648965", IconId.MCDONALDS.getIcon()));
         dao.insertOrder(new OrderData("МАК ДАК", "55.0106521380292, 82.93736307619466", IconId.MCDONALDS.getIcon()));
@@ -156,7 +159,7 @@ public class MainActivity extends BaseActivity {
     private void startHealthRegeneration() {
         regenerateTime = System.currentTimeMillis() + 1000 * 20;
         healthBar.setProgress(0);
-        healthBar.setMax(1000*20);
+        healthBar.setMax(1000*120);
         mTimer = new Timer();
         myHealthTask = new MyHealthTimer();
         mTimer.schedule(myHealthTask, 1000, 1000);
@@ -171,7 +174,7 @@ public class MainActivity extends BaseActivity {
                     healthBar.setProgress((int) (1000*20 - (regenerateTime - System.currentTimeMillis())));
                     if (healthBar.getProgress() >= healthBar.getMax()) {
                         gameData.health += 10;
-                        textHealth.setText(gameData.health+"/100");
+                        textHealth.setText(String.valueOf(gameData.health));
                         myHealthTask.cancel();
                         mTimer.cancel();
                         mTimer.purge();

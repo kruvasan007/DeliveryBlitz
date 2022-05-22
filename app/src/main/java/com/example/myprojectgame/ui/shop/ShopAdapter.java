@@ -2,6 +2,7 @@ package com.example.myprojectgame.ui.shop;
 
 import static com.example.myprojectgame.ui.root.MainActivity.gameData;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
         return data.size();
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public static void buyItem() {
         if (lastFood != null) {
             FoodData dataf = data.get(cards.indexOf(lastFood));

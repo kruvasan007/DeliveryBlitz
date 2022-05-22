@@ -1,63 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/red_white"
-    android:orientation="vertical"
-    android:layout_margin="16dp">
+    android:layout_margin="16dp"
+    android:background="@color/red_white">
 
     <Button
         android:id="@+id/close_button"
-        android:layout_gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:background="#000f"
         android:text="x"
-        android:background="#000f" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/text"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_margin="10dp"
         android:gravity="center"
         android:padding="16dp"
         android:text="OOOOPPPSS"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/close_button" />
 
-    <LinearLayout
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/view_style"
+        android:backgroundTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/flow"
+        app:layout_constraintEnd_toEndOf="@id/flow"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="@id/flow"
+        app:layout_constraintTop_toTopOf="@id/flow" />
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/redius_corners"
-        android:backgroundTint="@color/white"
-        android:layout_margin="16dp">
+        android:orientation="horizontal"
+        app:constraint_referenced_ids="message, hearts"
+        app:flow_horizontalGap="8dp"
+        app:flow_verticalAlign="center"
+        android:padding="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text" />
 
-        <TextView
-            android:padding="16dp"
-            android:id="@+id/message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="ВЫ СЛОМАЛИ НОГУ" />
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ВЫ СЛОМАЛИ НОГУ"
+        android:textColor="@color/black" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="-20"
-                android:textSize="18sp"
-                android:layout_margin="8dp"/>
-            <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/heart"
-            android:layout_margin="2dp"/>
-        </LinearLayout>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/hearts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:text="-20"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:drawableEndCompat="@drawable/heart"
+        tools:ignore="MissingConstraints" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

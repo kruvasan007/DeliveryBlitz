@@ -39,6 +39,7 @@ public class ClickerActivity extends BaseActivity {
     private MyTimer myTimerTask;
     private Timer mTimer;
     private static int damage;
+    private View clicker_view;
 
     @SuppressLint({"ClickableViewAccessibility", "ResourceAsColor"})
     @Override
@@ -47,7 +48,6 @@ public class ClickerActivity extends BaseActivity {
         setContentView(R.layout.activity_clicker);
 
         selectOrderData.state = 1;
-
         prograssBar = findViewById(R.id.progressBar);
         descr = findViewById(R.id.descr);
         timer = findViewById(R.id.timer);
@@ -81,8 +81,8 @@ public class ClickerActivity extends BaseActivity {
                 }
             }
         };
-
-        personImage.setOnClickListener(v -> clickAnimation());
+        clicker_view = findViewById(R.id.clicker_listener);
+        clicker_view.setOnClickListener(v -> clickAnimation());
     }
 
     private void setDamage(){
@@ -118,8 +118,8 @@ public class ClickerActivity extends BaseActivity {
 
     private void onStartTimer() {
         clickCounter = 0;
-        prograssBar.setMax((int) selectOrderData.currentTime-2);
-        prograssBar.setProgress(0);
+        prograssBar.setMax((int) selectOrderData.currentTime-2 + selectOrderData.currentProgress);
+        prograssBar.setProgress(selectOrderData.currentProgress);
         firstTime = System.currentTimeMillis() + selectOrderData.currentTime * 1000;
         mTimer = new Timer();
         myTimerTask = new MyTimer();
@@ -155,7 +155,7 @@ public class ClickerActivity extends BaseActivity {
     private void endTime() {
         gameData.money += selectOrderData.earnFomOrder;
         gameData.exp += selectOrderData.addExp;
-        selectOrderData = new SelectOrderData(null,null,null,null,null,null,null,null   );
+        selectOrderData = new SelectOrderData(null,null,null,null,null,null,null,null,null);
         Intent intent = new Intent(ClickerActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
@@ -163,6 +163,7 @@ public class ClickerActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
+        selectOrderData.lastTime = System.currentTimeMillis();
         myTimerTask.cancel();
         mTimer.cancel();
         mTimer.purge();
@@ -172,7 +173,14 @@ public class ClickerActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        onStartTimer();
+        if ( System.currentTimeMillis() - selectOrderData.lastTime >= selectOrderData.currentTime*1000 ){
+            makeToastSize("Доставка выполнена успешно");
+            endTime();
+        }
+        else{
+            selectOrderData.currentTime = (System.currentTimeMillis() - selectOrderData.lastTime) / 1000;
+            onStartTimer();
+        }
     }
 }
 

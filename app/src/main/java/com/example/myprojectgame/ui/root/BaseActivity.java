@@ -29,6 +29,15 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        PreferencesManager pm = new PreferencesManager(this);
+        gameData = pm.getGameData();
+        selectOrderData = pm.getSelectableOrderData();
+        pm.close();
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(this,MainActivity.class);
