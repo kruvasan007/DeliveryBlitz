@@ -166,7 +166,7 @@ public class MainActivity extends BaseActivity {
     private void startHealthRegeneration() {
         if (gameData.health < 100) {
             healthBar.setVisibility(View.VISIBLE);
-            regenerateTime = System.currentTimeMillis() + 1000 * 20;
+            regenerateTime = System.currentTimeMillis() + 1000 * 120;
             healthBar.setProgress(0);
             healthBar.setMax(1000*120);
             mTimer = new Timer();
@@ -197,7 +197,7 @@ public class MainActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    healthBar.setProgress((int) (1000*20 - (regenerateTime - System.currentTimeMillis())));
+                    healthBar.setProgress((int) (1000*120 - (regenerateTime - System.currentTimeMillis())));
                     if (healthBar.getProgress() >= healthBar.getMax()) {
                         gameData.health += 10;
                         textHealth.setText(String.valueOf(gameData.health));
