@@ -1,7 +1,15 @@
 package com.example.myprojectgame.ui.root;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationProvider;
+import android.location.LocationRequest;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -10,6 +18,9 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.data.GameData;
@@ -24,7 +35,12 @@ import com.example.myprojectgame.ui.App;
 import com.example.myprojectgame.ui.click.ClickerActivity;
 import com.example.myprojectgame.ui.delivery.DeliveryActivity;
 import com.example.myprojectgame.ui.shop.ShopActivity;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,12 +52,16 @@ public class MainActivity extends BaseActivity {
     private long regenerateTime;
     private PreferencesManager pm;
     private Button buttonStart;
+
+    private FusedLocationProviderClient client;
+    private Location lastLocation;
     public static SelectOrderData selectOrderData;
 
 
     private TextView textMoney, textHealth, textEx;
     private Timer mTimer;
     private MyHealthTimer myHealthTask;
+    private boolean isPermissionGranted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +72,7 @@ public class MainActivity extends BaseActivity {
         buttonStart = findViewById(R.id.select_button);
         buttonStart.setOnClickListener(v -> startButton());
 
+        client = LocationServices.getFusedLocationProviderClient(MainActivity.this);
         ImageButton buttonShop = findViewById(R.id.shop_button);
         buttonShop.setOnClickListener(v -> shopButton());
 
@@ -79,8 +100,10 @@ public class MainActivity extends BaseActivity {
     }
 
     private void createGameData() {
-        if (pm.getFirstRun()) firstRunDataBase();
         gameData = pm.getGameData();
+        if (pm.getFirstRun()) {
+            firstRunDataBase();
+        }
         startHealthRegeneration();
     }
 
@@ -118,14 +141,13 @@ public class MainActivity extends BaseActivity {
 
     private void getIntentionLastActivity() {
         if (selectOrderData.state == 1) {
-            if ( System.currentTimeMillis() - selectOrderData.lastTime >= selectOrderData.currentTime*1000 ){
-                Toast.makeText(this,"Доставка выполнена успешно",Toast
-                .LENGTH_SHORT).show();
+            if (System.currentTimeMillis() - selectOrderData.lastTime >= selectOrderData.currentTime * 1000) {
+                Toast.makeText(this, "Доставка выполнена успешно", Toast
+                        .LENGTH_SHORT).show();
                 gameData.money += selectOrderData.earnFomOrder;
                 gameData.exp += selectOrderData.addExp;
-                selectOrderData = new SelectOrderData(null,null,null,null,null,null,null,null,null);
-            }
-            else{
+                selectOrderData = new SelectOrderData(null, null, null, null, null, null, null, null, null);
+            } else {
                 selectOrderData.currentTime -= (System.currentTimeMillis() - selectOrderData.lastTime) / 1000;
                 startActivity(new Intent(this, ClickerActivity.class));
                 finish();
@@ -140,6 +162,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void firstRunDataBase() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         dao = App.getAppDatabaseInstance().orderDao();
         dao.insertOrder(new OrderData("МАК ДАК", "55.03963005768076, 82.96122777648965", IconId.MCDONALDS.getIcon()));
         dao.insertOrder(new OrderData("МАК ДАК", "55.0106521380292, 82.93736307619466", IconId.MCDONALDS.getIcon()));
@@ -168,10 +191,25 @@ public class MainActivity extends BaseActivity {
             healthBar.setVisibility(View.VISIBLE);
             regenerateTime = System.currentTimeMillis() + 1000 * 120;
             healthBar.setProgress(0);
-            healthBar.setMax(1000*120);
+            healthBar.setMax(1000 * 120);
             mTimer = new Timer();
             myHealthTask = new MyHealthTimer();
             mTimer.schedule(myHealthTask, 1000, 1000);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            client.getLastLocation().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    lastLocation = task.getResult();
+                    gameData.gamerCoord.set(0, lastLocation.getLatitude());
+                    gameData.gamerCoord.set(1, lastLocation.getLongitude());
+                }
+            });
         }
     }
 
@@ -197,17 +235,16 @@ public class MainActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    healthBar.setProgress((int) (1000*120 - (regenerateTime - System.currentTimeMillis())));
+                    healthBar.setProgress((int) (1000 * 120 - (regenerateTime - System.currentTimeMillis())));
                     if (healthBar.getProgress() >= healthBar.getMax()) {
                         gameData.health += 10;
                         textHealth.setText(String.valueOf(gameData.health));
                         myHealthTask.cancel();
                         mTimer.cancel();
                         mTimer.purge();
-                        if(gameData.health < 100) {
+                        if (gameData.health < 100) {
                             startHealthRegeneration();
-                        }
-                        else{
+                        } else {
                             healthBar.setVisibility(View.INVISIBLE);
                         }
                     }

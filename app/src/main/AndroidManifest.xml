@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myprojectgame">
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".ui.App"
         android:allowBackup="true"
@@ -12,7 +17,7 @@
         android:theme="@style/Theme.MyProjectGame">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
+            android:value="AIzaSyB1zfb3xWhk8yBV14SrgQrNEBQr3Jprew4" />
         <activity
             android:name=".ui.root.MainActivity"
             android:exported="true">
@@ -54,5 +59,4 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
-
 </manifest>
