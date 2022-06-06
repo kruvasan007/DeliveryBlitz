@@ -28,6 +28,10 @@ public class PreferencesManager implements Closeable {
         prefs.edit().putBoolean("firstrun", false).apply();
     }
 
+    public Integer getLastLogIn(){ return  prefs.getInt("lastDay", -3); }
+
+    public void setLastLogIn(int it) { prefs.edit().putInt("lastDay", it).apply(); }
+
     public GameData getGameData() {
         return new Gson().fromJson(prefs.getString(PREF_GAME_DATA, "{}"), GameData.class);
     }

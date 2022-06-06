@@ -23,9 +23,11 @@ public interface OrderDao {
     @Query("SELECT * FROM OrderData WHERE name = :selectName")
     List<OrderData> getByName(String selectName);
 
-
     @Query("SELECT * FROM FoodData WHERE name = :selectName")
     FoodData getByNameFood(String selectName);
+
+    @Query("UPDATE Orderdata SET coordinates = :cords WHERE id = :tid")
+    void updateCordinates(long tid, String cords);
 
     @Insert
     long insertOrder(OrderData orderData);

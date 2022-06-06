@@ -86,10 +86,11 @@ public class ClickerActivity extends BaseActivity {
         clicker_view.setOnClickListener(v -> clickAnimation());
     }
 
-    private void setDamage(){
+    private void setDamage() {
         Random random = new Random();
         damage = random.nextInt(10);
     }
+
     private void startAnim() {
         if (clickCounter == 1) {
             descr.setVisibility(View.INVISIBLE);
@@ -98,6 +99,7 @@ public class ClickerActivity extends BaseActivity {
             fastAnimation.start();
         }
     }
+
     private void clickAnimation() {
         clickCounter++;
         firstTime -= 1000;
@@ -119,7 +121,7 @@ public class ClickerActivity extends BaseActivity {
 
     private void onStartTimer() {
         clickCounter = 0;
-        prograssBar.setMax((int) selectOrderData.currentTime-2 + selectOrderData.currentProgress);
+        prograssBar.setMax((int) selectOrderData.currentTime - 2 + selectOrderData.currentProgress);
         prograssBar.setProgress(selectOrderData.currentProgress);
         firstTime = System.currentTimeMillis() + selectOrderData.currentTime * 1000;
         mTimer = new Timer();
@@ -145,8 +147,7 @@ public class ClickerActivity extends BaseActivity {
                     if (selectOrderData.currentTime <= 0) {
                         makeToastSize("Доставка выполнена успешно");
                         endTime();
-                    }
-                    else timer.setText(strDate);
+                    } else timer.setText(strDate);
 
                 }
             });
@@ -157,7 +158,7 @@ public class ClickerActivity extends BaseActivity {
         gameData.money += selectOrderData.earnFomOrder;
         gameData.exp += selectOrderData.addExp;
         gameData.money -= selectOrderData.costDelivery;
-        selectOrderData = new SelectOrderData(null,null,null,null,null,null,null,null,null);
+        selectOrderData = new SelectOrderData(null, null, null, null, null, null, null, null, null);
         Intent intent = new Intent(ClickerActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
@@ -179,11 +180,10 @@ public class ClickerActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if ( System.currentTimeMillis() - selectOrderData.lastTime >= selectOrderData.currentTime*1000 ){
+        if (System.currentTimeMillis() - selectOrderData.lastTime >= selectOrderData.currentTime * 1000) {
             makeToastSize("Доставка выполнена успешно");
             endTime();
-        }
-        else{
+        } else {
             selectOrderData.currentTime -= (System.currentTimeMillis() - selectOrderData.lastTime) / 1000;
             onStartTimer();
         }

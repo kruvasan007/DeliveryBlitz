@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.db.OrderDao;
 import com.example.myprojectgame.db.OrderData;
+import com.example.myprojectgame.domain.PreferencesManager;
 import com.example.myprojectgame.ui.App;
 import com.example.myprojectgame.ui.root.BaseActivity;
 import com.example.myprojectgame.ui.root.MainActivity;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -53,13 +55,8 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     private int time;
     public static List<Double> currentCoord;
     private LatLng gamer;
-    private Random random = new Random();
     private int earn, exp;
-    private double maxN, minN;
-    private List<OrderData> data;
-    private OrderData randomOrder;
-    private int boundOrder;
-    private double randomLatitude, randomLongitude;
+    private ArrayList<List<Float>> coords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,34 +79,21 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         finish();
     }
 
-    protected void nextActivity() {
-        if (selectOrderData.currentTime <= 0) makeToastSize("Выберите ресторан");
-        else {
-            try {
-                selectOrderData.currentTime = time;
-                Intent intent = new Intent(DeliveryActivity.this, ChooseTransportActivity.class);
-                startActivity(intent);
-                finish();
-            } catch (Exception e) {
-                makeToastSize("Выберите ресторан");
-            }
-        }
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        for (OrderData order : dao.selectOrder()) {
+            String[] o = order.coordinates.split(",");
+            coords = new ArrayList<>();
+            BitmapDescriptor iconShop = getIconFromDrawables(getDrawable(order.icon));
+            List<Float> or = new ArrayList<Float>();
+            or.add(Float.parseFloat(o[0]));
+            or.add(Float.parseFloat(o[1]));
+            coords.add(or);
+            if (Float.parseFloat(String.valueOf(gameData.gamerCoord.get(0))) != or.get(0))
+                mMap.addMarker(new MarkerOptions().position(new LatLng(or.get(0), or.get(1))).title(order.name).icon(iconShop).zIndex(order.id));
+        }
         settingsMap();
-        data = dao.selectOrder();
-
-        maxN = Math.sqrt((float) gameData.exp + 1) / 1000 + 0.01;
-        minN = -maxN;
-        if (gameData.exp > 1000){
-            boundOrder = 11;
-        } else boundOrder = gameData.exp/100 + 1;
-
-        for (int i = 0; i <= boundOrder; i++)
-            setNewOrderMarker();
 
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) marker -> {
             if (!gamer.equals(marker.getPosition())) {
@@ -137,24 +121,6 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         });
     }
 
-    private void setNewOrderMarker() {
-        randomOrder = data.get(random.nextInt(data.size()));
-        BitmapDescriptor iconShop = getIconFromDrawables(getDrawable(randomOrder.icon));
-        List<Double> or = new ArrayList<Double>();
-        randomLatitude = (minN + random.nextFloat() * (maxN - minN));
-        randomLongitude = (minN + random.nextFloat() * (maxN - minN));
-        if (Math.abs(randomLatitude) < maxN / 2){
-            randomLatitude += maxN / 2;
-        }
-        if (Math.abs(randomLongitude) < maxN / 2){
-            randomLongitude += maxN / 2;
-        }
-        or.add(gamer.latitude + randomLatitude);
-        or.add(gamer.longitude + randomLongitude);
-        if (Float.parseFloat(String.valueOf(gameData.gamerCoord.get(0))) != or.get(0))
-            mMap.addMarker(new MarkerOptions().position(new LatLng(or.get(0), or.get(1))).title(randomOrder.name).icon(iconShop).zIndex(randomOrder.id));
-    }
-
     private int calculateExp(float number) {
         return (int) (Math.log(gameData.exp + 2) * number / 300);
     }
@@ -173,19 +139,12 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         gamer = new LatLng(gameData.gamerCoord.get(0), gameData.gamerCoord.get(1));
         mMap.addMarker(new MarkerOptions().draggable(false).position(gamer).title("ВЫ НАХОДИТЕСЬ ЗДЕСЬ").icon(getIconFromDrawables(getDrawable(R.drawable.walking))));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(gamer));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(13f));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(14f));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(gamer));
         uiSettings = mMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(false);
         uiSettings.setMapToolbarEnabled(false);
         uiSettings.setCompassEnabled(false);
-    }
-
-    private void makeToastSize(String t) {
-        String text = t;
-        SpannableStringBuilder biggerText = new SpannableStringBuilder(text);
-        biggerText.setSpan(new RelativeSizeSpan(0.7f), 0, text.length(), 0);
-        Toast.makeText(this, biggerText, Toast.LENGTH_LONG).show();
     }
 
     private BitmapDescriptor getIconFromDrawables(Drawable drawable) {

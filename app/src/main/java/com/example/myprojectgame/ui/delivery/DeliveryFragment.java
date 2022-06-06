@@ -28,9 +28,6 @@ import java.util.concurrent.TimeUnit;
 public class DeliveryFragment extends Fragment {
     private OrderDao dao;
 
-    public DeliveryFragment() {
-    }
-
     public void nextActivity() {
         startActivity(new Intent(requireActivity(), ChooseTransportActivity.class));
     }
