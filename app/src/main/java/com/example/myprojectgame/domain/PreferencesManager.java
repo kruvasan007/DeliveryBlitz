@@ -28,6 +28,14 @@ public class PreferencesManager implements Closeable {
         prefs.edit().putBoolean("firstrun", false).apply();
     }
 
+    public Boolean getEnableLocationChoose() {
+        return prefs.getBoolean("location", false);
+    }
+
+    public void setEnableLocationChoose(boolean it) {
+        prefs.edit().putBoolean("location", it).apply();
+    }
+
     public Integer getLastLogIn(){ return  prefs.getInt("lastDay", -3); }
 
     public void setLastLogIn(int it) { prefs.edit().putInt("lastDay", it).apply(); }

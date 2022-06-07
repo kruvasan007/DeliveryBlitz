@@ -18,14 +18,24 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB1zfb3xWhk8yBV14SrgQrNEBQr3Jprew4" />
+
         <activity
-            android:name=".ui.root.MainActivity"
+            android:name=".ui.root.WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.root.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".ui.choose.ChooseTransportActivity"
             android:exported="true">

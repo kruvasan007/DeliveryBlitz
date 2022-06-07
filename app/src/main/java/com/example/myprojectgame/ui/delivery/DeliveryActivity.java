@@ -3,35 +3,22 @@ package com.example.myprojectgame.ui.delivery;
 import static com.example.myprojectgame.ui.root.MainActivity.gameData;
 import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationProvider;
-import android.location.LocationRequest;
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
-import android.text.style.RelativeSizeSpan;
 import android.widget.ImageButton;
-import android.widget.Toast;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.db.OrderDao;
 import com.example.myprojectgame.db.OrderData;
-import com.example.myprojectgame.domain.PreferencesManager;
 import com.example.myprojectgame.ui.App;
 import com.example.myprojectgame.ui.root.BaseActivity;
 import com.example.myprojectgame.ui.root.MainActivity;
-import com.example.myprojectgame.ui.choose.ChooseTransportActivity;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,18 +27,27 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.DirectionsApi;
+import com.google.maps.DirectionsApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.DirectionsRoute;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private UiSettings uiSettings;
+    private final String API_KEY = "AIzaSyB1zfb3xWhk8yBV14SrgQrNEBQr3Jprew4";
     private OrderDao dao;
+    private DirectionsResult direction;
     private int time;
     public static List<Double> currentCoord;
     private LatLng gamer;
@@ -101,6 +97,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
                 currentCoord = new ArrayList<Double>();
                 currentCoord.add(marker.getPosition().latitude);
                 currentCoord.add(marker.getPosition().longitude);
+
                 Location.distanceBetween(gamer.latitude, gamer.longitude,
                         marker.getPosition().latitude, marker.getPosition().longitude, results);
 
