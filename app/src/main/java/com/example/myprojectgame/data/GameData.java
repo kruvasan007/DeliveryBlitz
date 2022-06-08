@@ -8,12 +8,13 @@ public class GameData {
     public int health;
     public int exp;
     public List<Double> gamerCoord;
+    public List<String> enableTransport;
 
     public GameData() {
-        this(null, null, null, null);
+        this(null, null, null, null,null);
     }
 
-    public GameData(Integer money, Integer health, Integer exp, List<Double> coord) {
+    public GameData(Integer money, Integer health, Integer exp, List<Double> coord,List<String> transp) {
         if (money == null) this.money = 100; else this.money = money;
         if (health == null) this.health = 100; else this.health = health;
         if (exp == null) this.exp = 0; else this.exp = exp;
@@ -24,6 +25,13 @@ public class GameData {
             this.gamerCoord = arrayList;
         } else {
             this.gamerCoord = coord;
+        }
+        if(transp == null){
+            ArrayList<String> arrayList = new ArrayList<>();
+            arrayList.add("ПЕШКОМ");
+            this.enableTransport = arrayList;
+        } else{
+            this.enableTransport = transp;
         }
     }
 }

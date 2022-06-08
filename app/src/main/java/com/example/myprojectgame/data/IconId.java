@@ -11,7 +11,8 @@ public enum IconId {
     BUS (R.drawable.bus),
     METRO (R.drawable.train),
     WALK (R.drawable.walking),
-    STICK (R.drawable.stick);
+    STICK (R.drawable.stick),
+    ENERGETIC (R.drawable.ic_energetic);
 
     private int icon;
 

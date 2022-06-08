@@ -16,6 +16,7 @@ import com.example.myprojectgame.ui.root.MainActivity;
 public class ShopActivity extends BaseActivity {
 
     private static TextView textMoney, textHealth, textEx;
+    private int currentState = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,13 +34,30 @@ public class ShopActivity extends BaseActivity {
 
         Button buyButton = findViewById(R.id.buy_button);
         buyButton.setOnClickListener(v -> {
-            ShopAdapter.buyItem();
+            if(currentState == 0)
+                ShopAdapter.buyItem();
+            else
+                BuffsAdapter.buyTransport();
             textMoney.setText(String.valueOf(gameData.money));
             textHealth.setText(String.valueOf(gameData.health));
         });
 
         Button backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> backActivity());
+
+        Button changeButton = findViewById(R.id.change);
+        changeButton.setOnClickListener(view -> {
+            if(currentState == 0) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.ItemContainer, new BuffsFragment()).commit();
+                currentState = 1;
+            }
+            else{
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.ItemContainer, new ShopFragment()).commit();
+                currentState = 0;
+            }
+        });
     }
 
     private void backActivity() {

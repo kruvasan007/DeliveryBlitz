@@ -70,9 +70,10 @@ public class WelcomeActivity extends AppCompatActivity {
 
         dao.insertFood(new FoodData("КОФЕ", IconId.KOFFEE.getIcon(), 10, 5));
         dao.insertFood(new FoodData("БАТОНЧИК", IconId.STICK.getIcon(), 30, 15));
-        dao.insertTransport(new TransportData("АВТОБУС", 50, IconId.BUS.getIcon(), 0.7d));
-        dao.insertTransport(new TransportData("ПЕШКОМ", 0, IconId.WALK.getIcon(), 1.0d));
-        dao.insertTransport(new TransportData("МЕТРО", 100, IconId.METRO.getIcon(), 0.4d));
+        dao.insertFood(new FoodData("ЭНЕРГЕТИК", IconId.ENERGETIC.getIcon(), 30, 15));
+        dao.insertTransport(new TransportData("АВТОБУС", 50, IconId.BUS.getIcon(), 0.7d,"Прекрасный транспорт, комфорт на высоте, и личное пространство имеется. Но прийдется долго стоять в пробках ("));
+        dao.insertTransport(new TransportData("ПЕШКОМ", 0, IconId.WALK.getIcon(), 1.0d,""));
+        dao.insertTransport(new TransportData("МЕТРО", 100, IconId.METRO.getIcon(), 0.4d,"Дорого-богато жить не запретишь. Зато быстро и с ветерком )"));
     }
 
     private void requestPermissions() {
