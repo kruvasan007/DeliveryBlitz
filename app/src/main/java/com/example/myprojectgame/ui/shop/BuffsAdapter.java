@@ -67,8 +67,8 @@ public class BuffsAdapter extends RecyclerView.Adapter<BuffsAdapter.ViewHolder> 
     public static void buyTransport() {
         if (lastTransport != null) {
             TransportData dataf = data.get(cards.indexOf(lastTransport));
-            if (gameData.money - dataf.costs >= 0) {
-                gameData.money -= dataf.costs;
+            if (gameData.money - dataf.costs * 15 >= 0) {
+                gameData.money -= dataf.costs*15;
                 gameData.enableTransport.add(dataf.name);
                 lastTransport.setVisibility(View.GONE);
                 lastTransport.setMaxHeight(0);

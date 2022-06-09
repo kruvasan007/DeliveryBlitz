@@ -4,7 +4,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 
 public abstract class CustomAnimationDrawable extends AnimationDrawable {
-    Handler mAnimationHandler;
+    Handler animationHandler;
 
     public CustomAnimationDrawable(AnimationDrawable aniDrawable) {
         for (int i = 0; i < aniDrawable.getNumberOfFrames(); i++) {
@@ -15,30 +15,26 @@ public abstract class CustomAnimationDrawable extends AnimationDrawable {
     @Override
     public void start() {
         super.start();
-        mAnimationHandler = new Handler();
-        mAnimationHandler.post(new Runnable() {
+        animationHandler = new Handler();
+        animationHandler.post(new Runnable() {
             @Override
             public void run() {
                 onAnimationStart();
             }
         });
-        mAnimationHandler.postDelayed(new Runnable() {
+        animationHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 onAnimationFinish();
             }
         }, getTotalDuration());
-
     }
 
     public int getTotalDuration() {
-
         int iDuration = 0;
-
         for (int i = 0; i < this.getNumberOfFrames(); i++) {
             iDuration += this.getDuration(i);
         }
-
         return iDuration;
     }
 

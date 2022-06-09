@@ -5,12 +5,14 @@ import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
 
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
 
 import com.example.myprojectgame.R;
@@ -28,6 +30,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.DirectionsApi;
@@ -47,7 +50,6 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     private UiSettings uiSettings;
     private final String API_KEY = "AIzaSyB1zfb3xWhk8yBV14SrgQrNEBQr3Jprew4";
     private OrderDao dao;
-    private DirectionsResult direction;
     private int time;
     public static List<Double> currentCoord;
     private LatLng gamer;
@@ -78,7 +80,21 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        try {
+            boolean success = mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json_1));
+            if (!success) {
+                Log.e("MapsActivityRaw", "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e("MapsActivityRaw", "Can't find style.", e);
+        }
+
+        //add new points from db
         for (OrderData order : dao.selectOrder()) {
+            System.out.println();
             String[] o = order.coordinates.split(",");
             coords = new ArrayList<>();
             BitmapDescriptor iconShop = getIconFromDrawables(getDrawable(order.icon));
@@ -91,6 +107,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         }
         settingsMap();
 
+        //if user choose point
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) marker -> {
             if (!gamer.equals(marker.getPosition())) {
                 float[] results = new float[1];
@@ -118,6 +135,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         });
     }
 
+    //calculations of stats
     private int calculateExp(float number) {
         return (int) (Math.log(gameData.exp + 2) * number / 300);
     }

@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity {
     private OrderDao dao;
 
     public static GameData gameData;
-    private ProgressBar healthBar;
+    private ProgressBar healthBar, pointsBar;
     private long regenerateTime;
     private PreferencesManager pm;
 
@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity {
     public static SelectOrderData selectOrderData;
 
 
-    private TextView textMoney, textHealth, textEx;
+    private TextView textMoney, textHealth, textEx, textPoint;
     private Timer mTimer;
     private MyHealthTimer myHealthTask;
 
@@ -78,6 +78,7 @@ public class MainActivity extends BaseActivity {
 
         setContentView(R.layout.activity_main);
         healthBar = findViewById(R.id.progressBar);
+        pointsBar = findViewById(R.id.progressBarPoints);
         buttonStart = findViewById(R.id.select_button);
         buttonStart.setOnClickListener(v -> startButton());
 
@@ -87,6 +88,8 @@ public class MainActivity extends BaseActivity {
         textMoney = findViewById(R.id.money);
         textHealth = findViewById(R.id.health);
         textEx = findViewById(R.id.exp);
+        textPoint = findViewById(R.id.countPoints);
+
 
         client = LocationServices.getFusedLocationProviderClient(MainActivity.this);
         dao = App.getAppDatabaseInstance().orderDao();
@@ -97,14 +100,17 @@ public class MainActivity extends BaseActivity {
         createSelectOrderData();
         getIntentionLastActivity();
         requestDay();
+
         textMoney.setText(String.valueOf(gameData.money));
         textHealth.setText(String.valueOf(gameData.health));
         textEx.setText(String.valueOf(gameData.exp));
+        textPoint.setText(gameData.doneOrder.size() + "/10");
+        pointsBar.setProgress(gameData.doneOrder.size());
     }
 
     //button actions
     private void startButton() {
-        if (gameData.health > 10) {
+        if (gameData.health >= 10) {
             startDeliveryWithAnimation();
         } else Toast.makeText(this, "У вас недостаточно жизней", Toast.LENGTH_SHORT).show();
     }
@@ -119,7 +125,11 @@ public class MainActivity extends BaseActivity {
     private void getIntentionLastActivity() {
         if (selectOrderData.state == 1) {
             if (System.currentTimeMillis() - selectOrderData.lastTime >= selectOrderData.currentTime * 1000) {
-                Toast.makeText(this, "Доставка выполнена успешно", Toast
+                if (gameData.doneOrder.size() == 10) {
+                    gameData.money += 100;
+                    Toast.makeText(this, "Это был последний заказ! Молодец!", Toast
+                            .LENGTH_SHORT).show();
+                } else Toast.makeText(this, "Доставка выполнена успешно", Toast
                         .LENGTH_SHORT).show();
                 gameData.money += selectOrderData.earnFomOrder;
                 gameData.exp += selectOrderData.addExp;
@@ -148,6 +158,7 @@ public class MainActivity extends BaseActivity {
         day = calendar.get(Calendar.DAY_OF_WEEK);
         lastDayLogIn = pm.getLastLogIn();
         if (lastDayLogIn != day) {
+            gameData.doneOrder = new ArrayList<>();
             getLastLocation();
         }
     }
@@ -188,7 +199,8 @@ public class MainActivity extends BaseActivity {
                         dailyUpdatePoint();
                     }
                 });
-            } else Toast.makeText(this,"Ваша геолокация временно недоступна",Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(this, "Ваша геолокация временно недоступна", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -260,11 +272,6 @@ public class MainActivity extends BaseActivity {
             public void onAnimationRepeat(Animation animation) {
             }
         });
-    }
-
-    private void createDialogChooseLocation() {
-        LocationDialog dialogFragment = new LocationDialog();
-        dialogFragment.show(getSupportFragmentManager(), "dialogLocation");
     }
 
     //timer HEALTH REGENERATION

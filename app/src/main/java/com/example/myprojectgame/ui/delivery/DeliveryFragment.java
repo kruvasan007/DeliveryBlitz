@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.db.OrderDao;
+import com.example.myprojectgame.domain.PreferencesManager;
 import com.example.myprojectgame.ui.App;
 import com.example.myprojectgame.ui.choose.ChooseTransportActivity;
 

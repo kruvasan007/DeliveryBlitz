@@ -11,10 +11,10 @@
     <ImageView
         android:id="@+id/icon"
         android:layout_marginRight="16dp"
-        android:layout_width="84dp"
+        android:layout_width="128dp"
         android:padding="16dp"
         android:layout_height="84dp"
-        android:src="@drawable/mcdonalds"
+        android:src="@drawable/bike"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,6 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MonoFontStyle"
+        android:fontFamily="@font/pt_mono"
         android:padding="12dp"
         android:layout_marginTop="4dp"
         android:text=""

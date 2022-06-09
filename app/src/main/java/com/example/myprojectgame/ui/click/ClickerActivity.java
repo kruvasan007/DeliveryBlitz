@@ -48,7 +48,9 @@ public class ClickerActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clicker);
 
+        //start order
         selectOrderData.state = 1;
+
         prograssBar = findViewById(R.id.progressBar);
         descr = findViewById(R.id.descr);
         timer = findViewById(R.id.timer);
@@ -56,6 +58,8 @@ public class ClickerActivity extends BaseActivity {
         personAnimation = (AnimationDrawable) personImage.getBackground();
 
         personAnimation.start();
+
+        //create fastversion animation
         fastpersonAnimation = new AnimationDrawable();
         for (int i = 0; i < personAnimation.getNumberOfFrames(); i++)
             fastpersonAnimation.addFrame(personAnimation.getFrame(i), 50);
@@ -63,6 +67,8 @@ public class ClickerActivity extends BaseActivity {
 
         setDamage();
         onStartTimer();
+
+        //random accident
         if (damage == 3 && gameData.exp > 50 && gameData.health > 30) createDialogAccident();
 
         fastAnimation = new CustomAnimationDrawable(fastpersonAnimation) {
@@ -73,6 +79,7 @@ public class ClickerActivity extends BaseActivity {
             @Override
             public void onAnimationFinish() {
                 clickCounter--;
+                //if the number of clicks end
                 if (clickCounter == 0) {
                     this.stop();
                     personImage.setBackground(personAnimation);
@@ -119,6 +126,7 @@ public class ClickerActivity extends BaseActivity {
         Toast.makeText(this, biggerText, Toast.LENGTH_LONG).show();
     }
 
+    //set timer
     private void onStartTimer() {
         clickCounter = 0;
         prograssBar.setMax((int) selectOrderData.currentTime - 2 + selectOrderData.currentProgress);
@@ -155,6 +163,10 @@ public class ClickerActivity extends BaseActivity {
     }
 
     private void endTime() {
+        if(gameData.doneOrder.size() == 10){
+            gameData.money += 100;
+            makeToastSize("Это был последний заказ! Молодец!");
+        }
         gameData.money += selectOrderData.earnFomOrder;
         gameData.exp += selectOrderData.addExp;
         gameData.money -= selectOrderData.costDelivery;
@@ -164,6 +176,8 @@ public class ClickerActivity extends BaseActivity {
         finish();
     }
 
+
+    //checking for the end of time
     @Override
     protected void onPause() {
         selectOrderData.lastTime = System.currentTimeMillis();

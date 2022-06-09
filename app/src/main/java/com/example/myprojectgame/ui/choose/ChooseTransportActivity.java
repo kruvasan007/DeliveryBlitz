@@ -45,6 +45,8 @@ public class ChooseTransportActivity extends BaseActivity {
                 if (selectOrderData.k != 0) {
                     if ( gameData.money - selectOrderData.costDelivery >= 0){
                         gameData.gamerCoord = selectOrderData.selectCurrentCoord;
+                        if(gameData.doneOrder.size() < 10)
+                            gameData.doneOrder.add(selectOrderData.name);
                         selectOrderData.currentTime = (long) (selectOrderData.currentTime/(2-selectOrderData.k));
                         nextActivity();
                     }
