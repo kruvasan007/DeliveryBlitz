@@ -72,6 +72,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     }
 
     private void backActivity() {
+        gameData.health += 10;
         Intent intent = new Intent(DeliveryActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

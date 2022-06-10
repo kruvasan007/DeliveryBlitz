@@ -38,6 +38,7 @@ public class WelcomeActivity extends AppCompatActivity {
             Button chooseLocation = findViewById(R.id.choose_location_button);
             Button autoButton = findViewById(R.id.auto_button);
             chooseLocation.setOnClickListener(v -> {
+                pm.setEnableLocationChoose(true);
                 requestPermissions();
             });
             autoButton.setOnClickListener(view1 -> {

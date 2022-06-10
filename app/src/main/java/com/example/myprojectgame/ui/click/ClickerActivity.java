@@ -165,7 +165,7 @@ public class ClickerActivity extends BaseActivity {
     private void endTime() {
         if(gameData.doneOrder.size() == 10){
             gameData.money += 100;
-            makeToastSize("Это был последний заказ! Молодец!");
+            makeToastSize("Цель на день выполнена!");
         }
         gameData.money += selectOrderData.earnFomOrder;
         gameData.exp += selectOrderData.addExp;

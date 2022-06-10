@@ -35,8 +35,6 @@ public class ShopActivity extends BaseActivity {
         textHealth.setText(String.valueOf(gameData.health));
         textEx.setText(String.valueOf(gameData.exp));
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.ItemContainer, new ShopFragment()).commit();
 
         Button buyButton = findViewById(R.id.buy_button);
         buyButton.setOnClickListener(v -> {
@@ -55,14 +53,20 @@ public class ShopActivity extends BaseActivity {
         ImageButton foodButton = linearLayout.findViewById(R.id.food_button);
         ImageButton transportButton = linearLayout.findViewById(R.id.transport_button);
 
+        foodButton.setBackground(getDrawable(R.drawable.selectable_button));
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.ItemContainer, new ShopFragment()).commit();
+
         foodButton.setOnClickListener(view -> {
             foodButton.setBackground(getDrawable(R.drawable.selectable_button));
             transportButton.setBackground(getDrawable(R.drawable.food_style));
+            currentState = 0;
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.ItemContainer, new ShopFragment()).commit();
         });
 
         transportButton.setOnClickListener(view -> {
+            currentState = 1;
             foodButton.setBackground(getDrawable(R.drawable.food_style));
             transportButton.setBackground(getDrawable(R.drawable.selectable_button));
             getSupportFragmentManager().beginTransaction()

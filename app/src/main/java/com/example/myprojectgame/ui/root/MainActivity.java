@@ -62,6 +62,7 @@ public class MainActivity extends BaseActivity {
     private double minN;
     private int day;
     private double maxN;
+    private ImageButton buttonLocation;
 
     private FusedLocationProviderClient client;
     private Location lastLocation;
@@ -80,6 +81,7 @@ public class MainActivity extends BaseActivity {
         healthBar = findViewById(R.id.progressBar);
         pointsBar = findViewById(R.id.progressBarPoints);
         buttonStart = findViewById(R.id.select_button);
+        buttonLocation = findViewById(R.id.location_button);
         buttonStart.setOnClickListener(v -> startButton());
 
         ImageButton buttonShop = findViewById(R.id.shop_button);
@@ -98,14 +100,23 @@ public class MainActivity extends BaseActivity {
         pm = new PreferencesManager(this);
         createGameData();
         createSelectOrderData();
+
+        textPoint.setText(gameData.doneOrder.size() + "/10");
+        pointsBar.setProgress(gameData.doneOrder.size());
+
         getIntentionLastActivity();
         requestDay();
+
+        if(!pm.getEnableLocationChoose())
+            buttonLocation.setVisibility(View.VISIBLE);
+
+        buttonLocation.setOnClickListener(view -> {
+            getLastLocation();
+        });
 
         textMoney.setText(String.valueOf(gameData.money));
         textHealth.setText(String.valueOf(gameData.health));
         textEx.setText(String.valueOf(gameData.exp));
-        textPoint.setText(gameData.doneOrder.size() + "/10");
-        pointsBar.setProgress(gameData.doneOrder.size());
     }
 
     //button actions
@@ -127,7 +138,7 @@ public class MainActivity extends BaseActivity {
             if (System.currentTimeMillis() - selectOrderData.lastTime >= selectOrderData.currentTime * 1000) {
                 if (gameData.doneOrder.size() == 10) {
                     gameData.money += 100;
-                    Toast.makeText(this, "Это был последний заказ! Молодец!", Toast
+                    Toast.makeText(this, "Цель на день выполнена!", Toast
                             .LENGTH_SHORT).show();
                 } else Toast.makeText(this, "Доставка выполнена успешно", Toast
                         .LENGTH_SHORT).show();
@@ -158,14 +169,15 @@ public class MainActivity extends BaseActivity {
         day = calendar.get(Calendar.DAY_OF_WEEK);
         lastDayLogIn = pm.getLastLogIn();
         if (lastDayLogIn != day) {
+            lastDayLogIn = day;
+            pm.setLastLogIn(lastDayLogIn);
             gameData.doneOrder = new ArrayList<>();
+            pm.setEnableLocationChoose(false);
             getLastLocation();
         }
     }
 
     private void dailyUpdatePoint() {
-        lastDayLogIn = day;
-        pm.setLastLogIn(lastDayLogIn);
         maxN = Math.sqrt((float) gameData.exp + 1) / 350 + 0.01;
         minN = -maxN;
         for (OrderData order : dao.selectOrder()) {
@@ -180,7 +192,6 @@ public class MainActivity extends BaseActivity {
             or.add(lastLocation.getLongitude() + randomLongitude);
             dao.updateCordinates(order.id, or.get(0) + ", " + or.get(1));
         }
-        pm.close();
     }
 
     //request location
@@ -193,14 +204,18 @@ public class MainActivity extends BaseActivity {
                     if (location == null) {
                         requestNewLocationData();
                     } else {
+                        buttonLocation.setVisibility(View.GONE);
                         lastLocation = task.getResult();
+                        pm.setEnableLocationChoose(true);
                         gameData.gamerCoord.set(0, lastLocation.getLatitude());
                         gameData.gamerCoord.set(1, lastLocation.getLongitude());
                         dailyUpdatePoint();
+                        Toast.makeText(this, "Заказы успешно обновлены", Toast.LENGTH_SHORT).show();
                     }
                 });
-            } else
+            } else {
                 Toast.makeText(this, "Ваша геолокация временно недоступна", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

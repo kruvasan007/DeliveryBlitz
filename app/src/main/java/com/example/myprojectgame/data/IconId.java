@@ -20,7 +20,7 @@ public enum IconId {
     METRO (R.drawable.train),
     WALK (R.drawable.walking),
     BIKE (R.drawable.bike),
-    SKATE (R.drawable.stake),
+    SKATE (R.drawable.ic_skate),
 
     STICK (R.drawable.stick),
     ENERGETIC (R.drawable.ic_energetic);

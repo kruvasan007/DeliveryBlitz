@@ -45,6 +45,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/progressBarPoints"
         app:layout_constraintRight_toRightOf="@+id/progressBarPoints"
         app:layout_constraintTop_toBottomOf="@+id/progressBarPoints"/>
+
     <ProgressBar
         android:id="@+id/progressBarPoints"
         style="?android:attr/progressBarStyleHorizontal"
@@ -69,6 +70,17 @@
         android:background="@drawable/cart"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/location_button"
+        android:layout_height="72dp"
+        android:layout_width="72dp"
+        android:visibility="invisible"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="90dp"
+        android:background="@drawable/ic_location"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/shop_button" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
