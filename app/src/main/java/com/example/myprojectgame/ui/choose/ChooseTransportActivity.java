@@ -7,10 +7,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojectgame.R;
@@ -73,10 +77,19 @@ public class ChooseTransportActivity extends BaseActivity {
         finish();
     }
 
-    private void makeToastSize(String t) {
-        String text = t;
-        SpannableStringBuilder biggerText = new SpannableStringBuilder(text);
-        biggerText.setSpan(new RelativeSizeSpan(0.7f), 0, text.length(), 0);
-        Toast.makeText(this, biggerText, Toast.LENGTH_LONG).show();
+    private void makeToastSize(String message) {
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast,
+                (ConstraintLayout) findViewById(R.id.toast_layout));
+        TextView head = layout.findViewById(R.id.head);
+        TextView description = layout.findViewById(R.id.descript);
+        head.setText("Ошибка");
+        head.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.heart), null, null, null);
+        description.setText(message);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
     }
 }

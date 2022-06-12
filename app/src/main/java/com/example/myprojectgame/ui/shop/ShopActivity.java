@@ -6,13 +6,18 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.ui.root.BaseActivity;
@@ -38,10 +43,13 @@ public class ShopActivity extends BaseActivity {
 
         Button buyButton = findViewById(R.id.buy_button);
         buyButton.setOnClickListener(v -> {
-            if(currentState == 0)
-                ShopAdapter.buyItem();
+            int result;
+            if (currentState == 0)
+                result = ShopAdapter.buyItem();
             else
-                BuffsAdapter.buyTransport();
+                result = BuffsAdapter.buyTransport();
+            if (result != 0)
+                makeToastSize(result);
             textMoney.setText(String.valueOf(gameData.money));
             textHealth.setText(String.valueOf(gameData.health));
         });
@@ -78,6 +86,29 @@ public class ShopActivity extends BaseActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void makeToastSize(int type) {
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast,
+                (ConstraintLayout) findViewById(R.id.toast_layout));
+        TextView head = layout.findViewById(R.id.head);
+        TextView description = layout.findViewById(R.id.descript);
+        head.setText("Ошибка");
+        head.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.money), null, null, null);
+        switch (type) {
+            case 1:
+                description.setText("У вас недостаточно средств");
+                break;
+            case 2:
+                description.setText("Выберите товар");
+                break;
+        }
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
     }
 
 }

@@ -53,7 +53,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    public static void buyItem() {
+    public static Integer buyItem() {
         if (lastFood != null) {
             FoodData dataf = data.get(cards.indexOf(lastFood));
             if (gameData.money - dataf.cost >= 0) {
@@ -61,10 +61,9 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
                 gameData.money -= dataf.cost;
                 lastFood.setBackground(lastFood.getContext().getDrawable(R.drawable.food_style));
                 lastFood = null;
-            } else
-                Toast.makeText(cards.get(0).getContext(), "У вас недостаточно средств", Toast.LENGTH_SHORT).show();
-        } else
-            Toast.makeText(cards.get(0).getContext(), "Выберите товар", Toast.LENGTH_SHORT).show();
+                return 0;
+            } else return 1;
+        } else return 2;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -16,12 +16,12 @@ public enum IconId {
     PINE (R.drawable.ic_pine),
     KOFFEE (R.drawable.koffe),
 
+    LOCATION(R.drawable.ic_location_without_button),
     BUS (R.drawable.bus),
     METRO (R.drawable.train),
     WALK (R.drawable.walking),
     BIKE (R.drawable.bike),
     SKATE (R.drawable.ic_skate),
-
     STICK (R.drawable.stick),
     ENERGETIC (R.drawable.ic_energetic);
 

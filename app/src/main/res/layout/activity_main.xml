@@ -24,6 +24,7 @@
 
 
     <TextView
+        android:fontFamily="@font/press_start_2p"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/countPoints"
@@ -33,6 +34,7 @@
         app:layout_constraintRight_toRightOf="@+id/progressBarPoints"
         android:text="0/10"/>
     <TextView
+        android:fontFamily="@font/press_start_2p"
         android:id="@+id/descriptionProgress"
         android:layout_width="164dp"
         android:orientation="vertical"

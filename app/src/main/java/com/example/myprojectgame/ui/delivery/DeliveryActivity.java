@@ -95,7 +95,6 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
 
         //add new points from db
         for (OrderData order : dao.selectOrder()) {
-            System.out.println();
             String[] o = order.coordinates.split(",");
             coords = new ArrayList<>();
             BitmapDescriptor iconShop = getIconFromDrawables(getDrawable(order.icon));

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-    android:background="@color/red_white">
+    android:background="@color/blue">
 
     <Button
         android:id="@+id/close_button"
@@ -13,25 +13,28 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:background="#000f"
+        android:fontFamily="@font/press_start_2p"
         android:text="x"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:fontFamily="@font/press_start_2p"
         android:id="@+id/text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:fontFamily="@font/press_start_2p"
         android:gravity="center"
         android:padding="16dp"
-        android:text="OOOOPPPSS"
+        android:text="Поздравляем!"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/close_button" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
+        android:fontFamily="@font/pt_mono"
+        android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10dp"
@@ -46,34 +49,39 @@
         android:id="@+id/flow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="18dp"
-        app:constraint_referenced_ids="message, hearts"
-        app:flow_horizontalGap="8dp"
+        android:orientation="vertical"
+        app:constraint_referenced_ids="message, money"
         app:flow_verticalAlign="center"
+        android:padding="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text" />
 
     <TextView
+        android:fontFamily="@font/pt_mono"
         android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/press_start_2p"
-        android:text="ВЫ СЛОМАЛИ НОГУ"
-        android:textColor="@color/black" />
+        android:text="Задание на сегодня выполнено!"
+        android:textAlignment="center"
+        android:padding="4dp"
+        android:textColor="@color/black"
+        tools:layout_editor_absoluteX="10dp"
+        tools:layout_editor_absoluteY="80dp" />
 
     <TextView
-        android:id="@+id/hearts"
+        android:fontFamily="@font/press_start_2p"
+        android:id="@+id/money"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/press_start_2p"
         android:gravity="bottom"
-        android:text="-20"
+        android:text="+20"
+        android:padding="4dp"
+        android:layout_marginRight="24dp"
         android:textColor="@color/black"
         android:textSize="18sp"
-        app:drawableEndCompat="@drawable/heart"
+        app:drawableRightCompat="@drawable/money"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

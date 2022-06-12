@@ -9,17 +9,20 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import com.example.myprojectgame.R;
@@ -30,6 +33,7 @@ import com.example.myprojectgame.db.OrderData;
 import com.example.myprojectgame.domain.PreferencesManager;
 import com.example.myprojectgame.ui.App;
 import com.example.myprojectgame.ui.click.ClickerActivity;
+import com.example.myprojectgame.ui.MyDialogFragment;
 import com.example.myprojectgame.ui.delivery.DeliveryActivity;
 import com.example.myprojectgame.ui.shop.ShopActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -106,10 +110,11 @@ public class MainActivity extends BaseActivity {
 
         getIntentionLastActivity();
         requestDay();
+        chekDayAchivments();
 
-        if(!pm.getEnableLocationChoose())
+        //request unenabledlocation
+        if (!pm.getEnableLocationChoose() && checkPermissions())
             buttonLocation.setVisibility(View.VISIBLE);
-
         buttonLocation.setOnClickListener(view -> {
             getLastLocation();
         });
@@ -119,11 +124,25 @@ public class MainActivity extends BaseActivity {
         textEx.setText(String.valueOf(gameData.exp));
     }
 
+    private void dialogAchivments() {
+        MyDialogFragment dialogFragment = new MyDialogFragment();
+        dialogFragment.setValue("Задание на сегодня выполнено!","Поздравляем!",R.layout.achivment_dialog);
+        dialogFragment.show(getSupportFragmentManager(), "dialog");
+    }
+
+    private void chekDayAchivments(){
+        if (gameData.doneOrder.size() == 10 && !pm.getDayAchievements()) {
+            gameData.money += 100;
+            dialogAchivments();
+            pm.setDayAchievements(true);
+        }
+    }
+
     //button actions
     private void startButton() {
         if (gameData.health >= 10) {
             startDeliveryWithAnimation();
-        } else Toast.makeText(this, "У вас недостаточно жизней", Toast.LENGTH_SHORT).show();
+        } else makeToastSize("У вас недостаточно жизней", 0);
     }
 
     private void shopButton() {
@@ -136,12 +155,7 @@ public class MainActivity extends BaseActivity {
     private void getIntentionLastActivity() {
         if (selectOrderData.state == 1) {
             if (System.currentTimeMillis() - selectOrderData.lastTime >= selectOrderData.currentTime * 1000) {
-                if (gameData.doneOrder.size() == 10) {
-                    gameData.money += 100;
-                    Toast.makeText(this, "Цель на день выполнена!", Toast
-                            .LENGTH_SHORT).show();
-                } else Toast.makeText(this, "Доставка выполнена успешно", Toast
-                        .LENGTH_SHORT).show();
+                makeToastSize("Доставка выполнена успешно", 2);
                 gameData.money += selectOrderData.earnFomOrder;
                 gameData.exp += selectOrderData.addExp;
                 selectOrderData = new SelectOrderData(null, null, null, null, null, null, null, null, null);
@@ -151,6 +165,35 @@ public class MainActivity extends BaseActivity {
                 finish();
             }
         }
+    }
+
+    private void makeToastSize(String message, int type) {
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast,
+                (LinearLayout) findViewById(R.id.toast_layout));
+
+        TextView head = layout.findViewById(R.id.head);
+        TextView description = layout.findViewById(R.id.descript);
+        switch (type) {
+            case 0:
+                head.setText("Здоровье");
+                head.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.heart), null, null, null);
+                break;
+            case 1:
+                head.setText("Локация");
+                head.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_location_without_button), null, null, null);
+                break;
+            case 2:
+                head.setText("Вознаграждение");
+                head.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.money), null, null, null);
+                break;
+        }
+        description.setText(message);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.TOP, 10, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
     }
 
     //create data from pm
@@ -172,7 +215,10 @@ public class MainActivity extends BaseActivity {
             lastDayLogIn = day;
             pm.setLastLogIn(lastDayLogIn);
             gameData.doneOrder = new ArrayList<>();
+            pointsBar.setProgress(gameData.doneOrder.size());
+            textPoint.setText(gameData.doneOrder.size() + "/10");
             pm.setEnableLocationChoose(false);
+            pm.setDayAchievements(false);
             getLastLocation();
         }
     }
@@ -210,11 +256,11 @@ public class MainActivity extends BaseActivity {
                         gameData.gamerCoord.set(0, lastLocation.getLatitude());
                         gameData.gamerCoord.set(1, lastLocation.getLongitude());
                         dailyUpdatePoint();
-                        Toast.makeText(this, "Заказы успешно обновлены", Toast.LENGTH_SHORT).show();
+                        makeToastSize("Заказы успешно обновлены", 1);
                     }
                 });
             } else {
-                Toast.makeText(this, "Ваша геолокация временно недоступна", Toast.LENGTH_SHORT).show();
+                makeToastSize("Ваша геолокация временно недоступна", 1);
             }
         }
     }
@@ -303,29 +349,30 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    class MyHealthTimer extends TimerTask {
-        @Override
-        public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    healthBar.setProgress((int) (1000 * 120 - (regenerateTime - System.currentTimeMillis())));
-                    if (healthBar.getProgress() >= healthBar.getMax()) {
-                        gameData.health += 10;
-                        textHealth.setText(String.valueOf(gameData.health));
-                        myHealthTask.cancel();
-                        mTimer.cancel();
-                        mTimer.purge();
-                        if (gameData.health < 100) {
-                            startHealthRegeneration();
-                        } else {
-                            healthBar.setVisibility(View.INVISIBLE);
-                        }
+class MyHealthTimer extends TimerTask {
+    @Override
+    public void run() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                healthBar.setProgress((int) (1000 * 120 - (regenerateTime - System.currentTimeMillis())));
+                if (healthBar.getProgress() >= healthBar.getMax()) {
+                    gameData.health += 10;
+                    textHealth.setText(String.valueOf(gameData.health));
+                    myHealthTask.cancel();
+                    mTimer.cancel();
+                    mTimer.purge();
+                    if (gameData.health < 100) {
+                        startHealthRegeneration();
+                    } else {
+                        healthBar.setVisibility(View.INVISIBLE);
                     }
                 }
-            });
-        }
+            }
+        });
     }
+
+}
 
     @Override
     protected void onPause() {

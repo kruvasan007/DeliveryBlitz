@@ -64,7 +64,7 @@ public class BuffsAdapter extends RecyclerView.Adapter<BuffsAdapter.ViewHolder> 
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    public static void buyTransport() {
+    public static Integer buyTransport() {
         if (lastTransport != null) {
             TransportData dataf = data.get(cards.indexOf(lastTransport));
             if (gameData.money - dataf.costs * 15 >= 0) {
@@ -74,10 +74,9 @@ public class BuffsAdapter extends RecyclerView.Adapter<BuffsAdapter.ViewHolder> 
                 lastTransport.setMaxHeight(0);
                 lastTransport.setBackground(lastTransport.getContext().getDrawable(R.drawable.food_style));
                 lastTransport = null;
-            } else
-                Toast.makeText(cards.get(0).getContext(), "У вас недостаточно средств", Toast.LENGTH_SHORT).show();
-        } else
-            Toast.makeText(cards.get(0).getContext(), "Выберите товар", Toast.LENGTH_SHORT).show();
+                return 0;
+            } else return 1;
+        } else return 2;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

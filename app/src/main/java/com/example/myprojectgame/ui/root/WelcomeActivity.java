@@ -75,11 +75,11 @@ public class WelcomeActivity extends AppCompatActivity {
         dao.insertFood(new FoodData("БАТОНЧИК", IconId.STICK.getIcon(), 30, 15));
         dao.insertFood(new FoodData("ЭНЕРГЕТИК", IconId.ENERGETIC.getIcon(), 30, 15));
 
-        dao.insertTransport(new TransportData("МАШИНА", 150, IconId.BUS.getIcon(), 0.4d,"Прекрасный транспорт, комфорт на высоте, и личное пространство имеется. Но прийдется долго стоять в пробках ("));
+        dao.insertTransport(new TransportData("МАШИНА", 150, IconId.BUS.getIcon(), 0.35d,"Прекрасный транспорт, комфорт на высоте, и личное пространство имеется. Но прийдется долго стоять в пробках ("));
         dao.insertTransport(new TransportData("ПЕШКОМ", 0, IconId.WALK.getIcon(), 1.0d,""));
         dao.insertTransport(new TransportData("ПРОЕЗДНОЙ", 50, IconId.METRO.getIcon(), 0.6d,"В тесноте, да не в обиде. Зато быстро и в социуме"));
-        dao.insertTransport(new TransportData("ВЕЛОСИПЕД", 25 , IconId.BIKE.getIcon(), 0.85d,"Если ты поддерживаешь экологию, велосипед - твой выбор!"));
-        dao.insertTransport(new TransportData("СКЕЙТ", 10, IconId.SKATE.getIcon(), 0.95d,"После работы сразу можешь заскочить к ребятам на дворе и покатать"));
+        dao.insertTransport(new TransportData("ВЕЛОСИПЕД", 25 , IconId.BIKE.getIcon(), 0.7d,"Если ты поддерживаешь экологию, велосипед - твой выбор!"));
+        dao.insertTransport(new TransportData("СКЕЙТ", 10, IconId.SKATE.getIcon(), 0.8d,"После работы сразу можешь заскочить к ребятам на дворе и покатать"));
     }
 
     //if user wants location using

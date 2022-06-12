@@ -28,6 +28,13 @@ public class PreferencesManager implements Closeable {
         prefs.edit().putBoolean("firstrun", false).apply();
     }
 
+    public Boolean getDayAchievements() {
+        return prefs.getBoolean("achievements", false);
+    }
+
+    public void setDayAchievements(boolean it) {
+        prefs.edit().putBoolean("achievements", it).apply();
+    }
     public Boolean getEnableLocationChoose() {
         return prefs.getBoolean("location", false);
     }

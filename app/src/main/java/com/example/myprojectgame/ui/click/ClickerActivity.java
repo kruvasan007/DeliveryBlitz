@@ -7,8 +7,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
-import android.text.style.RelativeSizeSpan;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -16,10 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.data.SelectOrderData;
 import com.example.myprojectgame.domain.PreferencesManager;
+import com.example.myprojectgame.ui.MyDialogFragment;
 import com.example.myprojectgame.ui.root.BaseActivity;
 import com.example.myprojectgame.ui.root.MainActivity;
 
@@ -120,10 +122,33 @@ public class ClickerActivity extends BaseActivity {
         gameData.health -= 20;
     }
 
-    private void makeToastSize(String t) {
-        SpannableStringBuilder biggerText = new SpannableStringBuilder(t);
-        biggerText.setSpan(new RelativeSizeSpan(0.7f), 0, t.length(), 0);
-        Toast.makeText(this, biggerText, Toast.LENGTH_LONG).show();
+    private void makeToastSize(String message, int type) {
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast,
+                (ConstraintLayout) findViewById(R.id.toast_layout));
+
+        TextView head = layout.findViewById(R.id.head);
+        TextView description = layout.findViewById(R.id.descript);
+        switch (type) {
+            case 0:
+                head.setText("Здоровье");
+                head.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.heart), null, null, null);
+                break;
+            case 1:
+                head.setText("Локация");
+                head.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_location_without_button), null, null, null);
+                break;
+            case 2:
+                head.setText("Вознаграждение");
+                head.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.money), null, null, null);
+                break;
+        }
+        description.setText(message);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
     }
 
     //set timer
@@ -153,7 +178,7 @@ public class ClickerActivity extends BaseActivity {
                     prograssBar.setProgress(prograssBar.getProgress() + 1);
                     selectOrderData.currentProgress = prograssBar.getProgress();
                     if (selectOrderData.currentTime <= 0) {
-                        makeToastSize("Доставка выполнена успешно");
+                        makeToastSize("Доставка выполнена успешно", 2);
                         endTime();
                     } else timer.setText(strDate);
 
@@ -163,10 +188,6 @@ public class ClickerActivity extends BaseActivity {
     }
 
     private void endTime() {
-        if(gameData.doneOrder.size() == 10){
-            gameData.money += 100;
-            makeToastSize("Цель на день выполнена!");
-        }
         gameData.money += selectOrderData.earnFomOrder;
         gameData.exp += selectOrderData.addExp;
         gameData.money -= selectOrderData.costDelivery;
@@ -175,7 +196,6 @@ public class ClickerActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
-
 
     //checking for the end of time
     @Override
@@ -195,7 +215,7 @@ public class ClickerActivity extends BaseActivity {
     protected void onRestart() {
         super.onRestart();
         if (System.currentTimeMillis() - selectOrderData.lastTime >= selectOrderData.currentTime * 1000) {
-            makeToastSize("Доставка выполнена успешно");
+            makeToastSize("Доставка выполнена успешно",2);
             endTime();
         } else {
             selectOrderData.currentTime -= (System.currentTimeMillis() - selectOrderData.lastTime) / 1000;

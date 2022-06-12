@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/ckicker_style">
     <TextView
+        android:fontFamily="@font/press_start_2p"
         android:id="@+id/descr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,6 +29,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:fontFamily="@font/press_start_2p"
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,6 +70,7 @@
             android:max="100" />
 
         <TextView
+            android:fontFamily="@font/press_start_2p"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -77,6 +80,7 @@
             android:textSize="24sp" />
 
         <TextView
+            android:fontFamily="@font/press_start_2p"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/view_style"

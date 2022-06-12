@@ -9,4 +9,10 @@
         <item name="cornerRadius">16dp</item>
         <item name="background">@color/blue</item>
     </style>
+    <style name="MonoFontStyle" parent="Theme.MyProjectGame">
+        <item name="android:fontFamily">@font/pt_mono</item>
+    </style>
+    <style name="pFontStyle" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:fontFamily">@font/press_start_2p</item>
+    </style>
 </resources>
