@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -125,7 +126,7 @@ public class ClickerActivity extends BaseActivity {
     private void makeToastSize(String message, int type) {
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.toast,
-                (ConstraintLayout) findViewById(R.id.toast_layout));
+                (LinearLayout) findViewById(R.id.toast_layout));
 
         TextView head = layout.findViewById(R.id.head);
         TextView description = layout.findViewById(R.id.descript);

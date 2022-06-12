@@ -24,7 +24,6 @@ public class ShopFragment extends Fragment {
     private List<FoodData> data;
     private ShopAdapter adapter;
     private OrderDao dao;
-    private LinearLayoutManager mLayoutManager;
 
     @Nullable
     @Override

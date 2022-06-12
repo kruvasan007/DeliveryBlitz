@@ -170,4 +170,10 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         drawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSupportFragmentManager().popBackStack();
+    }
 }

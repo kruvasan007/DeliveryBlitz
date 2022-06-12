@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,7 +81,7 @@ public class ChooseTransportActivity extends BaseActivity {
     private void makeToastSize(String message) {
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.toast,
-                (ConstraintLayout) findViewById(R.id.toast_layout));
+                (LinearLayout) findViewById(R.id.toast_layout));
         TextView head = layout.findViewById(R.id.head);
         TextView description = layout.findViewById(R.id.descript);
         head.setText("Ошибка");

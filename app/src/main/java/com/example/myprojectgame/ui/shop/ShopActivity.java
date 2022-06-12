@@ -91,7 +91,7 @@ public class ShopActivity extends BaseActivity {
     private void makeToastSize(int type) {
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.toast,
-                (ConstraintLayout) findViewById(R.id.toast_layout));
+                (LinearLayout) findViewById(R.id.toast_layout));
         TextView head = layout.findViewById(R.id.head);
         TextView description = layout.findViewById(R.id.descript);
         head.setText("Ошибка");
