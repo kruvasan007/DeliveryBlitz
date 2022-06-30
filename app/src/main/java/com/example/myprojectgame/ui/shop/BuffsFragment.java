@@ -10,11 +10,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojectgame.R;
-import com.example.myprojectgame.db.FoodData;
 import com.example.myprojectgame.db.OrderDao;
 import com.example.myprojectgame.db.TransportData;
 import com.example.myprojectgame.ui.App;

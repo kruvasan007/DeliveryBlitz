@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -31,7 +30,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
     public ShopAdapter(List<FoodData> data) {
         cards.clear();
         lastFood = null;
-        this.data = data;
+        ShopAdapter.data = data;
     }
 
     @NonNull
@@ -52,7 +51,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
         return data.size();
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
+
     public static Integer buyItem() {
         if (lastFood != null) {
             FoodData dataf = data.get(cards.indexOf(lastFood));

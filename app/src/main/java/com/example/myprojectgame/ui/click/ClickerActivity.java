@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.data.SelectOrderData;
@@ -37,15 +36,13 @@ public class ClickerActivity extends BaseActivity {
     private int clickCounter;
     private ImageView personImage;
     private CustomAnimationDrawable fastAnimation;
-    private ProgressBar prograssBar;
+    private ProgressBar progressBar;
     private TextView timer, descr;
     private long firstTime;
     private MyTimer myTimerTask;
     private Timer mTimer;
     private static int damage;
-    private View clicker_view;
 
-    @SuppressLint({"ClickableViewAccessibility", "ResourceAsColor"})
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +51,7 @@ public class ClickerActivity extends BaseActivity {
         //start order
         selectOrderData.state = 1;
 
-        prograssBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);
         descr = findViewById(R.id.descr);
         timer = findViewById(R.id.timer);
         personImage = findViewById(R.id.image_view);
@@ -62,7 +59,7 @@ public class ClickerActivity extends BaseActivity {
 
         personAnimation.start();
 
-        //create fastversion animation
+        //create fast version animation
         fastpersonAnimation = new AnimationDrawable();
         for (int i = 0; i < personAnimation.getNumberOfFrames(); i++)
             fastpersonAnimation.addFrame(personAnimation.getFrame(i), 50);
@@ -92,7 +89,7 @@ public class ClickerActivity extends BaseActivity {
                 }
             }
         };
-        clicker_view = findViewById(R.id.clicker_listener);
+        View clicker_view = findViewById(R.id.clicker_listener);
         clicker_view.setOnClickListener(v -> clickAnimation());
     }
 
@@ -113,7 +110,7 @@ public class ClickerActivity extends BaseActivity {
     private void clickAnimation() {
         clickCounter++;
         firstTime -= 1000;
-        prograssBar.setProgress(prograssBar.getProgress() + 1);
+        progressBar.setProgress(progressBar.getProgress() + 1);
         startAnim();
     }
 
@@ -155,8 +152,8 @@ public class ClickerActivity extends BaseActivity {
     //set timer
     private void onStartTimer() {
         clickCounter = 0;
-        prograssBar.setMax((int) selectOrderData.currentTime - 2 + selectOrderData.currentProgress);
-        prograssBar.setProgress(selectOrderData.currentProgress);
+        progressBar.setMax((int) selectOrderData.currentTime - 2 + selectOrderData.currentProgress);
+        progressBar.setProgress(selectOrderData.currentProgress);
         firstTime = System.currentTimeMillis() + selectOrderData.currentTime * 1000;
         mTimer = new Timer();
         myTimerTask = new MyTimer();
@@ -166,24 +163,21 @@ public class ClickerActivity extends BaseActivity {
     class MyTimer extends TimerTask {
         @Override
         public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    selectOrderData.currentTime = firstTime - System.currentTimeMillis() - 1000;
-                    @SuppressLint("DefaultLocale") String strDate = String.format("%02d:%02d",
-                            TimeUnit.MILLISECONDS.toMinutes(selectOrderData.currentTime),
-                            TimeUnit.MILLISECONDS.toSeconds(selectOrderData.currentTime) -
-                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(selectOrderData.currentTime))
-                    );
-                    selectOrderData.currentTime /= 1000;
-                    prograssBar.setProgress(prograssBar.getProgress() + 1);
-                    selectOrderData.currentProgress = prograssBar.getProgress();
-                    if (selectOrderData.currentTime <= 0) {
-                        makeToastSize("Доставка выполнена успешно", 2);
-                        endTime();
-                    } else timer.setText(strDate);
+            runOnUiThread(() -> {
+                selectOrderData.currentTime = firstTime - System.currentTimeMillis() - 1000;
+                String strDate = String.format("%02d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(selectOrderData.currentTime),
+                        TimeUnit.MILLISECONDS.toSeconds(selectOrderData.currentTime) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(selectOrderData.currentTime))
+                );
+                selectOrderData.currentTime /= 1000;
+                progressBar.setProgress(progressBar.getProgress() + 1);
+                selectOrderData.currentProgress = progressBar.getProgress();
+                if (selectOrderData.currentTime <= 0) {
+                    makeToastSize("Доставка выполнена успешно", 2);
+                    endTime();
+                } else timer.setText(strDate);
 
-                }
             });
         }
     }

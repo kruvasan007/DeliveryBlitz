@@ -2,9 +2,7 @@ package com.example.myprojectgame.ui.shop;
 
 import static com.example.myprojectgame.ui.root.MainActivity.gameData;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,8 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.ui.root.BaseActivity;
@@ -28,7 +24,6 @@ public class ShopActivity extends BaseActivity {
     private static TextView textMoney, textHealth, textEx;
     private int currentState = 0;
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +34,6 @@ public class ShopActivity extends BaseActivity {
         textMoney.setText(String.valueOf(gameData.money));
         textHealth.setText(String.valueOf(gameData.health));
         textEx.setText(String.valueOf(gameData.exp));
-
 
         Button buyButton = findViewById(R.id.buy_button);
         buyButton.setOnClickListener(v -> {

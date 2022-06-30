@@ -16,18 +16,8 @@ public abstract class CustomAnimationDrawable extends AnimationDrawable {
     public void start() {
         super.start();
         animationHandler = new Handler();
-        animationHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                onAnimationStart();
-            }
-        });
-        animationHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                onAnimationFinish();
-            }
-        }, getTotalDuration());
+        animationHandler.post(this::onAnimationStart);
+        animationHandler.postDelayed(this::onAnimationFinish, getTotalDuration());
     }
 
     public int getTotalDuration() {

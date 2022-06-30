@@ -15,13 +15,13 @@ import com.example.myprojectgame.R;
 
 public class MyDialogFragment extends DialogFragment {
     private  String message, head;
-    private Integer deafault = R.layout.dialog_fragment;
+    private Integer defaults = R.layout.dialog_fragment;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(deafault,container,false);
-        if (deafault == R.layout.achivment_dialog){
+        View view = inflater.inflate(defaults,container,false);
+        if (defaults == R.layout.achivment_dialog){
             TextView textIcon = view.findViewById(R.id.money);
             TextView textDescr = view.findViewById(R.id.message);
             textIcon.setText("+100");
@@ -37,6 +37,6 @@ public class MyDialogFragment extends DialogFragment {
     public void setValue(String msg, String hd,Integer def){
         this.message = msg;
         this.head = hd;
-        this.deafault = def;
+        this.defaults = def;
     }
 }

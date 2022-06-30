@@ -3,4 +3,8 @@
     <string name="Select_button">Выбрать заказ</string>
     <string name="_20_100">20/100</string>
     <string name="MAPS_API_KEY">AIzaSyB1zfb3xWhk8yBV14SrgQrNEBQr3Jprew4</string>
+    <string name="your_progress">Твой прогресс сегодня</string>
+    <string name="shop">SHOP</string>
+    <string name="location">LOCATION</string>
+    <string name="update">UPDATE</string>
 </resources>

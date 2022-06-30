@@ -1,12 +1,12 @@
 package com.example.myprojectgame.ui.root;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -28,7 +28,8 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_activity);
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null)
+            getSupportActionBar().hide();
         pm = new PreferencesManager(this);
 
         //if it is first run
@@ -44,13 +45,12 @@ public class WelcomeActivity extends AppCompatActivity {
             autoButton.setOnClickListener(view1 -> {
                 startMainActivity();
             });
-        }
-        else startMainActivity();
+        } else startMainActivity();
     }
 
     private void startMainActivity() {
         pm.close();
-        Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
+        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
@@ -73,13 +73,14 @@ public class WelcomeActivity extends AppCompatActivity {
 
         dao.insertFood(new FoodData("КОФЕ", IconId.KOFFEE.getIcon(), 10, 5));
         dao.insertFood(new FoodData("БАТОНЧИК", IconId.STICK.getIcon(), 30, 15));
-        dao.insertFood(new FoodData("ЭНЕРГЕТИК", IconId.ENERGETIC.getIcon(), 30, 15));
+        dao.insertFood(new FoodData("ЭНЕРГЕТИК", IconId.ENERGETIC.getIcon(), 60, 40));
 
-        dao.insertTransport(new TransportData("МАШИНА", 150, IconId.BUS.getIcon(), 0.35d,"Прекрасный транспорт, комфорт на высоте, и личное пространство имеется. Но прийдется долго стоять в пробках ("));
-        dao.insertTransport(new TransportData("ПЕШКОМ", 0, IconId.WALK.getIcon(), 1.0d,""));
-        dao.insertTransport(new TransportData("ПРОЕЗДНОЙ", 50, IconId.METRO.getIcon(), 0.6d,"В тесноте, да не в обиде. Зато быстро и в социуме"));
-        dao.insertTransport(new TransportData("ВЕЛОСИПЕД", 25 , IconId.BIKE.getIcon(), 0.7d,"Если ты поддерживаешь экологию, велосипед - твой выбор!"));
-        dao.insertTransport(new TransportData("СКЕЙТ", 10, IconId.SKATE.getIcon(), 0.8d,"После работы сразу можешь заскочить к ребятам на дворе и покатать"));
+        dao.insertTransport(new TransportData("МАШИНА", 150, IconId.BUS.getIcon(), 0.35d, "Прекрасный транспорт, комфорт на высоте, и личное пространство имеется. Но придется долго стоять в пробках (", true));
+        dao.insertTransport(new TransportData("ПЕШКОМ", 0, IconId.WALK.getIcon(), 1.0d, "", false));
+        dao.insertTransport(new TransportData("ПРОЕЗДНОЙ", 50, IconId.METRO.getIcon(), 0.6d, "В тесноте, да не в обиде. Зато быстро и в социуме", true));
+        dao.insertTransport(new TransportData("ВЕЛОСИПЕД", 25, IconId.BIKE.getIcon(), 0.7d, "Если ты поддерживаешь экологию, велосипед - твой выбор!", false));
+        dao.insertTransport(new TransportData("СКЕЙТ", 10, IconId.SKATE.getIcon(), 0.8d, "После работы сразу можешь заскочить к ребятам на дворе и покатать", false));
+        dao.insertTransport(new TransportData("САМОЛЕТ", 2000, IconId.FLY.getIcon(), 0.05d, "Ай белиииив ай кен флааааай", true));
     }
 
     //if user wants location using
@@ -91,7 +92,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Override
     public void
-    onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

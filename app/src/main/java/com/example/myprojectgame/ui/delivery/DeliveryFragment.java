@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myprojectgame.R;
 import com.example.myprojectgame.db.OrderDao;
-import com.example.myprojectgame.domain.PreferencesManager;
 import com.example.myprojectgame.ui.App;
 import com.example.myprojectgame.ui.choose.ChooseTransportActivity;
 
@@ -47,7 +46,7 @@ public class DeliveryFragment extends Fragment {
         nextButton.setOnClickListener(v -> nextActivity());
 
         ImageView icon = view.findViewById(R.id.icon);
-        @SuppressLint("DefaultLocale") String stringTime = String.format("%02d:%02d",
+        String stringTime = String.format("%02d:%02d",
                 TimeUnit.SECONDS.toMinutes(selectOrderData.currentTime),
                 TimeUnit.SECONDS.toSeconds(selectOrderData.currentTime) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(selectOrderData.currentTime))

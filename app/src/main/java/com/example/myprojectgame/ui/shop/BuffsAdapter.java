@@ -8,18 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojectgame.R;
-import com.example.myprojectgame.db.FoodData;
 import com.example.myprojectgame.db.TransportData;
 
 import java.util.LinkedList;
@@ -34,7 +30,7 @@ public class BuffsAdapter extends RecyclerView.Adapter<BuffsAdapter.ViewHolder> 
     public BuffsAdapter(List<TransportData> data) {
         cards.clear();
         lastTransport = null;
-        this.data = data;
+        BuffsAdapter.data = data;
     }
 
     @NonNull
@@ -63,7 +59,7 @@ public class BuffsAdapter extends RecyclerView.Adapter<BuffsAdapter.ViewHolder> 
         return data.size();
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
+
     public static Integer buyTransport() {
         if (lastTransport != null) {
             TransportData dataf = data.get(cards.indexOf(lastTransport));

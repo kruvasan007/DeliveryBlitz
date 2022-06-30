@@ -79,9 +79,12 @@ public class ChooseTransportAdapter extends RecyclerView.Adapter<ChooseTransport
             name.setText(item.name);
             cards.add(card);
             card.setClipToOutline(true);
-            earn.setText(item.costs + " руб.");
+            if(item.payment) {
+                earn.setText(item.costs + " руб.");
+            }
+            else earn.setText("Бесплатно");
             long orderTime = (long) (selectOrderData.currentTime/(2 - item.k));
-            @SuppressLint("DefaultLocale") String stringTime = String.format("%02d:%02d",
+            String stringTime = String.format("%02d:%02d",
                     TimeUnit.SECONDS.toMinutes(orderTime),
                     TimeUnit.SECONDS.toSeconds(orderTime) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(orderTime))

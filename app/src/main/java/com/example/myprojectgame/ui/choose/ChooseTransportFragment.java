@@ -20,9 +20,8 @@ import com.example.myprojectgame.ui.App;
 import java.util.ArrayList;
 import java.util.List;
 
-public class СhooseTransportFragment extends Fragment {
+public class ChooseTransportFragment extends Fragment {
     private OrderDao dao;
-    private ChooseTransportAdapter adapter;
     private List<TransportData> data;
 
     @Nullable
@@ -37,7 +36,7 @@ public class СhooseTransportFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_layout);
         data = new ArrayList<>();
         getTransportData();
-        adapter = new ChooseTransportAdapter(data);
+        ChooseTransportAdapter adapter = new ChooseTransportAdapter(data);
         recyclerView.setAdapter(adapter);
     }
 

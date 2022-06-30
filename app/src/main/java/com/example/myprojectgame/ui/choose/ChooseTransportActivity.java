@@ -5,8 +5,6 @@ import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
-import android.text.style.RelativeSizeSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myprojectgame.R;
@@ -27,9 +24,6 @@ import com.example.myprojectgame.ui.click.ClickerActivity;
 import com.example.myprojectgame.ui.root.BaseActivity;
 
 public class ChooseTransportActivity extends BaseActivity {
-    private static TextView textView;
-    private RecyclerView recyclerLayout;
-
     private OrderDao dao;
 
     @Override
@@ -39,10 +33,10 @@ public class ChooseTransportActivity extends BaseActivity {
         dao = App.getAppDatabaseInstance().orderDao();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.MainContainer, new СhooseTransportFragment()).commit();
+                .replace(R.id.MainContainer, new ChooseTransportFragment()).commit();
 
-        recyclerLayout = findViewById(R.id.recycler_layout);
-        textView = findViewById(R.id.textView);
+        RecyclerView recyclerLayout = findViewById(R.id.recycler_layout);
+        TextView textView = findViewById(R.id.textView);
         Button buttonClose = findViewById(R.id.back_button);
         Button buttonNext = findViewById(R.id.next_step_button);
 
@@ -62,7 +56,9 @@ public class ChooseTransportActivity extends BaseActivity {
         buttonClose.setOnClickListener(v -> closeButton());
     }
     public static void OrderTransport(TransportData data) {
-        selectOrderData.costDelivery = data.costs;
+        if (data.payment) {
+            selectOrderData.costDelivery = data.costs;
+        } else selectOrderData.costDelivery = 0;
         selectOrderData.k = data.k;
     }
 

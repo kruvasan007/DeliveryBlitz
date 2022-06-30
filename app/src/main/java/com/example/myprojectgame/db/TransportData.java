@@ -13,13 +13,15 @@ class TransportData {
     public int costs;
     public int icon;
     public Double k;
+    public boolean payment;
     public String description;
 
-    public TransportData(String name, int costs, int icon, Double k, String description) {
+    public TransportData(String name, int costs, int icon, Double k, String description, boolean payment) {
         this.name = name;
         this.icon = icon;
         this.costs = costs;
         this.k = k;
         this.description = description;
+        this.payment = payment;
     }
 }

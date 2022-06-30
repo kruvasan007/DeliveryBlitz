@@ -22,7 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.example.myprojectgame.R;
@@ -57,15 +57,10 @@ public class MainActivity extends BaseActivity {
     private long regenerateTime;
     private PreferencesManager pm;
 
-    private Random random = new Random();
+    private final Random random = new Random();
     private Button buttonStart;
 
-    private double randomLatitude, randomLongitude;
-    private Calendar calendar;
-    private Integer lastDayLogIn;
-    private double minN;
-    private int day;
-    private double maxN;
+    private ImageButton buttonUpdate;
     private ImageButton buttonLocation;
 
     private FusedLocationProviderClient client;
@@ -73,7 +68,8 @@ public class MainActivity extends BaseActivity {
     public static SelectOrderData selectOrderData;
 
 
-    private TextView textMoney, textHealth, textEx, textPoint;
+    private TextView textHealth;
+    private TextView textPoint;
     private Timer mTimer;
     private MyHealthTimer myHealthTask;
 
@@ -86,14 +82,16 @@ public class MainActivity extends BaseActivity {
         pointsBar = findViewById(R.id.progressBarPoints);
         buttonStart = findViewById(R.id.select_button);
         buttonLocation = findViewById(R.id.location_button);
+
+        buttonUpdate = findViewById(R.id.update_button);
         buttonStart.setOnClickListener(v -> startButton());
 
         ImageButton buttonShop = findViewById(R.id.shop_button);
         buttonShop.setOnClickListener(v -> shopButton());
 
-        textMoney = findViewById(R.id.money);
+        TextView textMoney = findViewById(R.id.money);
         textHealth = findViewById(R.id.health);
-        textEx = findViewById(R.id.exp);
+        TextView textEx = findViewById(R.id.exp);
         textPoint = findViewById(R.id.countPoints);
 
 
@@ -104,19 +102,42 @@ public class MainActivity extends BaseActivity {
         pm = new PreferencesManager(this);
         createGameData();
         createSelectOrderData();
-
-        textPoint.setText(gameData.doneOrder.size() + "/10");
-        pointsBar.setProgress(gameData.doneOrder.size());
-
         getIntentionLastActivity();
         requestDay();
-        chekDayAchivments();
+        chekDayAchievements();
 
-        //request unenabledlocation
+        //request enabled location
         if (!pm.getEnableLocationChoose() && checkPermissions())
             buttonLocation.setVisibility(View.VISIBLE);
-        buttonLocation.setOnClickListener(view -> {
-            getLastLocation();
+        buttonLocation.setOnClickListener(view -> getLastLocation());
+
+
+        //update progressBar
+        if (pointsBar.getProgress() < 10 && !pm.getDayAchievements()) {
+            textPoint.setText(gameData.doneOrder.size() + "/10");
+            pointsBar.setProgress(gameData.doneOrder.size());
+            buttonUpdate.setVisibility(View.INVISIBLE);
+        }
+        else{
+            textPoint.setText("10/10");
+            pointsBar.setProgress(10);
+        }
+
+        if(gameData.doneOrder.size() == 10)
+            buttonUpdate.setVisibility(View.VISIBLE);
+
+        //request update orders
+        buttonUpdate.setOnClickListener(view -> {
+            if (gameData.money >= 100) {
+                if (locationEnabled()) {
+                    gameData.money -= 100;
+                    textMoney.setText(gameData.money+"");
+                    gameData.doneOrder = new ArrayList<>();
+                    getLastLocation();
+                    buttonUpdate.setVisibility(View.INVISIBLE);
+                }else makeToastSize("Ваша геолокация временно недоступна", 1);
+            }
+            else makeToastSize("У вас недостаточно средств",3);
         });
 
         textMoney.setText(String.valueOf(gameData.money));
@@ -124,16 +145,17 @@ public class MainActivity extends BaseActivity {
         textEx.setText(String.valueOf(gameData.exp));
     }
 
-    private void dialogAchivments() {
+    private void dialogAchievements() {
         MyDialogFragment dialogFragment = new MyDialogFragment();
         dialogFragment.setValue("Задание на сегодня выполнено!","Поздравляем!",R.layout.achivment_dialog);
         dialogFragment.show(getSupportFragmentManager(), "dialog");
     }
 
-    private void chekDayAchivments(){
+    private void chekDayAchievements(){
         if (gameData.doneOrder.size() == 10 && !pm.getDayAchievements()) {
             gameData.money += 100;
-            dialogAchivments();
+            dialogAchievements();
+            buttonUpdate.setVisibility(View.VISIBLE);
             pm.setDayAchievements(true);
         }
     }
@@ -187,6 +209,10 @@ public class MainActivity extends BaseActivity {
                 head.setText("Вознаграждение");
                 head.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.money), null, null, null);
                 break;
+            case 3:
+                head.setText("Ошибка");
+                head.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.money), null, null, null);
+                break;
         }
         description.setText(message);
         Toast toast = new Toast(getApplicationContext());
@@ -208,13 +234,13 @@ public class MainActivity extends BaseActivity {
 
     //request last login day for update
     private void requestDay() {
-        calendar = Calendar.getInstance();
-        day = calendar.get(Calendar.DAY_OF_WEEK);
-        lastDayLogIn = pm.getLastLogIn();
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        Integer lastDayLogIn = pm.getLastLogIn();
         if (lastDayLogIn != day) {
             lastDayLogIn = day;
             pm.setLastLogIn(lastDayLogIn);
-            gameData.doneOrder = new ArrayList<>();
+            gameData.doneOrder = new ArrayList<String>();
             pointsBar.setProgress(gameData.doneOrder.size());
             textPoint.setText(gameData.doneOrder.size() + "/10");
             pm.setEnableLocationChoose(false);
@@ -224,12 +250,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void dailyUpdatePoint() {
-        maxN = Math.sqrt((float) gameData.exp + 1) / 350 + 0.01;
-        minN = -maxN;
+        double maxN = Math.sqrt((float) gameData.exp + 1) / 350 + 0.01;
+        double minN = -maxN;
         for (OrderData order : dao.selectOrder()) {
             List<Double> or = new ArrayList<Double>();
-            randomLatitude = (minN + random.nextFloat() * (maxN - minN));
-            randomLongitude = (minN + random.nextFloat() * (maxN - minN));
+            double randomLatitude = (minN + random.nextFloat() * (maxN - minN));
+            double randomLongitude = (minN + random.nextFloat() * (maxN - minN));
             if (Math.abs(randomLatitude) < maxN / 2)
                 randomLatitude += maxN / 2;
             if (Math.abs(randomLongitude) < maxN / 2)
@@ -279,7 +305,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void
-    onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -288,7 +314,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private LocationCallback locationCallback = new LocationCallback() {
+    private final LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             lastLocation = locationResult.getLastLocation();
@@ -352,21 +378,18 @@ public class MainActivity extends BaseActivity {
 class MyHealthTimer extends TimerTask {
     @Override
     public void run() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                healthBar.setProgress((int) (1000 * 120 - (regenerateTime - System.currentTimeMillis())));
-                if (healthBar.getProgress() >= healthBar.getMax()) {
-                    gameData.health += 10;
-                    textHealth.setText(String.valueOf(gameData.health));
-                    myHealthTask.cancel();
-                    mTimer.cancel();
-                    mTimer.purge();
-                    if (gameData.health < 100) {
-                        startHealthRegeneration();
-                    } else {
-                        healthBar.setVisibility(View.INVISIBLE);
-                    }
+        runOnUiThread(() -> {
+            healthBar.setProgress((int) (1000 * 120 - (regenerateTime - System.currentTimeMillis())));
+            if (healthBar.getProgress() >= healthBar.getMax()) {
+                gameData.health += 10;
+                textHealth.setText(String.valueOf(gameData.health));
+                myHealthTask.cancel();
+                mTimer.cancel();
+                mTimer.purge();
+                if (gameData.health < 100) {
+                    startHealthRegeneration();
+                } else {
+                    healthBar.setVisibility(View.INVISIBLE);
                 }
             }
         });

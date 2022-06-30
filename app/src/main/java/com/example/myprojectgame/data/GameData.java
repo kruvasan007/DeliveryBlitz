@@ -15,7 +15,7 @@ public class GameData {
         this(null, null, null, null,null,null);
     }
 
-    public GameData(Integer money, Integer health, Integer exp, List<Double> coord,List<String> transp,List<String> dO) {
+    public GameData(Integer money, Integer health, Integer exp, List<Double> coord, List<String> transp, List<String> dO) {
         if (money == null) this.money = 100; else this.money = money;
         if (health == null) this.health = 100; else this.health = health;
         if (exp == null) this.exp = 0; else this.exp = exp;
@@ -35,7 +35,7 @@ public class GameData {
             this.enableTransport = transp;
         }
         if(dO == null){
-            this.doneOrder = new ArrayList<>();
+            this.doneOrder = new ArrayList<String>();
         } else{
             this.doneOrder = dO;
         }

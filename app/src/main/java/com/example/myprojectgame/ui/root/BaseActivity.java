@@ -4,6 +4,7 @@ import static com.example.myprojectgame.ui.root.MainActivity.gameData;
 import static com.example.myprojectgame.ui.root.MainActivity.selectOrderData;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -16,7 +17,9 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null)
+            getSupportActionBar().hide();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override
