@@ -66,7 +66,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
-        if (!checkInternetConnection()){
+        if (!checkInternetConnection()) {
             makeToastSize();
         }
         if (mapFragment != null) {
@@ -81,8 +81,8 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         finish();
     }
 
-    private boolean checkInternetConnection(){
-        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+    private boolean checkInternetConnection() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
@@ -100,7 +100,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
                 Log.e("MapsActivityRaw", "Style parsing failed.");
             }
         } catch (Resources.NotFoundException e) {
-            Log.e("MapsActivityRaw", "Can't find style.", e);
+            Log.e("MapsActivityRaw", "Cant find style.", e);
         }
 
         //add new points from db
@@ -109,7 +109,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
                 String[] o = order.coordinates.split(",");
                 ArrayList<List<Float>> cords = new ArrayList<>();
                 BitmapDescriptor iconShop = getIconFromDrawables(getDrawable(order.icon));
-                List<Float> or = new ArrayList<Float>();
+                List<Float> or = new ArrayList<>();
                 or.add(Float.parseFloat(o[0]));
                 or.add(Float.parseFloat(o[1]));
                 cords.add(or);
@@ -123,7 +123,7 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) marker -> {
             if (!gamer.equals(marker.getPosition())) {
                 float[] results = new float[1];
-                currentCoord = new ArrayList<Double>();
+                currentCoord = new ArrayList<>();
                 currentCoord.add(marker.getPosition().latitude);
                 currentCoord.add(marker.getPosition().longitude);
 
@@ -150,14 +150,14 @@ public class DeliveryActivity extends BaseActivity implements OnMapReadyCallback
     //calculations of stats
     private int calculateExp(float number) {
         int result = (int) (Math.log(gameData.exp + 2) * number / 300);
-        if (result != 0){
+        if (result != 0) {
             return result;
         } else return 1;
     }
 
     private int calculateEarn(float number) {
         int result_money = (int) (number / ((4 / 3.6) * 300) + ((1 + gameData.exp) / 5));
-        if(result_money != 0) {
+        if (result_money != 0) {
             return result_money;
         } else return 1;
     }

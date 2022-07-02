@@ -62,7 +62,7 @@ public class MainActivity extends BaseActivity {
 
     private ImageButton buttonUpdate;
     private ImageButton buttonLocation;
-
+    private TextView updateText;
     private FusedLocationProviderClient client;
     private Location lastLocation;
     public static SelectOrderData selectOrderData;
@@ -84,6 +84,7 @@ public class MainActivity extends BaseActivity {
         buttonLocation = findViewById(R.id.location_button);
 
         buttonUpdate = findViewById(R.id.update_button);
+        updateText = findViewById(R.id.update_text);
         buttonStart.setOnClickListener(v -> startButton());
 
         ImageButton buttonShop = findViewById(R.id.shop_button);
@@ -117,14 +118,17 @@ public class MainActivity extends BaseActivity {
             textPoint.setText(gameData.doneOrder.size() + "/10");
             pointsBar.setProgress(gameData.doneOrder.size());
             buttonUpdate.setVisibility(View.INVISIBLE);
+            updateText.setVisibility(View.INVISIBLE);
         }
         else{
             textPoint.setText("10/10");
             pointsBar.setProgress(10);
         }
 
-        if(gameData.doneOrder.size() == 10)
+        if(gameData.doneOrder.size() == 10) {
             buttonUpdate.setVisibility(View.VISIBLE);
+            updateText.setVisibility(View.VISIBLE);
+        }
 
         //request update orders
         buttonUpdate.setOnClickListener(view -> {
@@ -135,6 +139,7 @@ public class MainActivity extends BaseActivity {
                     gameData.doneOrder = new ArrayList<>();
                     getLastLocation();
                     buttonUpdate.setVisibility(View.INVISIBLE);
+                    updateText.setVisibility(View.INVISIBLE);
                 }else makeToastSize("Ваша геолокация временно недоступна", 1);
             }
             else makeToastSize("У вас недостаточно средств",3);
@@ -156,6 +161,7 @@ public class MainActivity extends BaseActivity {
             gameData.money += 100;
             dialogAchievements();
             buttonUpdate.setVisibility(View.VISIBLE);
+            updateText.setVisibility(View.VISIBLE);
             pm.setDayAchievements(true);
         }
     }
